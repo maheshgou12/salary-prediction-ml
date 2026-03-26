@@ -1,28 +1,34 @@
 import streamlit as st
 import pickle
+import os
 import numpy as np
 
-# Page config
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Salary Predictor",
     page_icon="💼",
     layout="centered"
 )
 
-# Load model
-import pickle
-import os
-
+# ---------------- LOAD MODEL SAFELY ----------------
 model_path = os.path.join(os.path.dirname(__file__), "salary_model.pkl")
 
-model = pickle.load(open(model_path, "rb"))
+@st.cache_resource
+def load_model():
+    with open(model_path, "rb") as f:
+        return pickle.load(f)
 
-# Title
-st.markdown("<h1 style='text-align: center; color: #2E86C1;'>💼 Salary Prediction System</h1>", unsafe_allow_html=True)
+model = load_model()
+
+# ---------------- TITLE ----------------
+st.markdown(
+    "<h1 style='text-align:center;color:#2E86C1;'>💼 Salary Prediction System</h1>",
+    unsafe_allow_html=True
+)
 
 st.markdown("---")
 
-# Sidebar inputs
+# ---------------- SIDEBAR INPUT ----------------
 st.sidebar.header("Enter Candidate Details")
 
 exp = st.sidebar.slider("Experience (Years)", 0, 15, 1)
@@ -36,35 +42,41 @@ st.write("Interview Score:", interview)
 
 st.markdown("---")
 
-# Prediction button
+# ---------------- PREDICTION ----------------
 if st.button("Predict Salary"):
-
-    prediction = model.predict([[exp, test, interview]])
-
-    st.success(f"🎯 Predicted Expected CTC: {prediction[0]:.2f} LPA")
+    try:
+        prediction = model.predict([[exp, test, interview]])
+        st.success(f"🎯 Predicted Expected CTC: {prediction[0]:.2f} LPA")
+    except Exception as e:
+        st.error("Prediction error. Please try again.")
 
 st.markdown("---")
+
+# ---------------- MODEL PERFORMANCE ----------------
 st.markdown("### 📈 Model Performance")
-
 st.write("Random Forest R2 Score: 0.91")
-st.progress(91)
+st.progress(0.91)
 
+st.markdown("---")
 
+# ---------------- FEATURE IMPORTANCE ----------------
+st.markdown("### 🔎 Important Features")
+st.image("feature_importance.png", width="stretch")
 
-# Project info
+st.markdown("---")
+
+# ---------------- PROJECT INFO ----------------
 st.write("### 📊 Project Description")
-st.write("""
+st.write(
+    """
 This system predicts expected salary using Machine Learning.
 Model used: Random Forest Regression.
 It analyzes candidate experience, test performance and interview score.
-""")
+"""
+)
 
-# Footer
+# ---------------- FOOTER ----------------
 st.markdown(
     "<p style='text-align:center'>Developed for Placement Project 🚀</p>",
     unsafe_allow_html=True
 )
-
-st.markdown("### 🔎 Important Features")
-
-st.image("feature_importance.png", use_container_width=True)
