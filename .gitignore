@@ -1,0 +1,6 @@
+salary_model.pkl
+*.pkl
+*.csv
+.ipynb_checkpoints/
+__pycache__/
+venv/
