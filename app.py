@@ -10,7 +10,12 @@ st.set_page_config(
 )
 
 # Load model
-model = pickle.load(open("salary_model.pkl", "rb"))
+import pickle
+import os
+
+model_path = os.path.join(os.path.dirname(__file__), "salary_model.pkl")
+
+model = pickle.load(open(model_path, "rb"))
 
 # Title
 st.markdown("<h1 style='text-align: center; color: #2E86C1;'>💼 Salary Prediction System</h1>", unsafe_allow_html=True)
