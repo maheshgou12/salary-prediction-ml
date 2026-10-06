@@ -2,58 +2,65 @@
 
 Clean Streamlit UI for salary prediction with fairness and explainability.
 """
+
 from __future__ import annotations
 
-import io
 import json
 import os
 import warnings
 from pathlib import Path
-import matplotlib.pyplot as plt
 from typing import Any
 
 import joblib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shap
 import streamlit as st
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 # Configuration
-MODEL_PATH = Path('models/best_model.joblib')
-DATA_PATH = Path('data/salary_data.csv')
-SHAP_ANALYSIS_PATH = Path('models/shap_analysis.json')
-FAIRNESS_AUDIT_PATH = Path('models/fairness_audit.json')
-CONFORMAL_SUMMARY_PATH = Path('models/conformal_summary.json')
+MODEL_PATH = Path("models/best_model.joblib")
+DATA_PATH = Path("data/salary_data.csv")
+SHAP_ANALYSIS_PATH = Path("models/shap_analysis.json")
+FAIRNESS_AUDIT_PATH = Path("models/fairness_audit.json")
+CONFORMAL_SUMMARY_PATH = Path("models/conformal_summary.json")
 
 # Feature configuration
 NUMERICAL_FEATURES = [
-    'years_experience',
-    'skills_count',
-    'previous_salary',
-    'interview_score',
+    "years_experience",
+    "skills_count",
+    "previous_salary",
+    "interview_score",
 ]
 
 
 CATEGORICAL_FEATURES = [
-    'education_level',
-    'job_role',
-    'location',
-    'company_size',
+    "education_level",
+    "job_role",
+    "location",
+    "company_size",
 ]
 
 ALL_FEATURES = NUMERICAL_FEATURES + CATEGORICAL_FEATURES
 
 # Categorical options (from training data)
-EDUCATION_LEVELS = ['High School', 'Bachelor', 'Master', 'PhD']
+EDUCATION_LEVELS = ["High School", "Bachelor", "Master", "PhD"]
 JOB_ROLES = [
-    'Software Engineer', 'Data Scientist', 'ML Engineer', 'DevOps Engineer',
-    'Frontend Developer', 'Backend Developer', 'Full Stack Developer',
-    'Data Analyst', 'Product Manager', 'Engineering Manager'
+    "Software Engineer",
+    "Data Scientist",
+    "ML Engineer",
+    "DevOps Engineer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Data Analyst",
+    "Product Manager",
+    "Engineering Manager",
 ]
-LOCATIONS = ['San Francisco', 'New York', 'Seattle', 'Austin', 'Boston', 'Remote', 'Chicago', 'Los Angeles']
-COMPANY_SIZES = ['Startup (1-50)', 'Small (51-200)', 'Medium (201-1000)', 'Large (1000+)']
+LOCATIONS = ["San Francisco", "New York", "Seattle", "Austin", "Boston", "Remote", "Chicago", "Los Angeles"]
+COMPANY_SIZES = ["Startup (1-50)", "Small (51-200)", "Medium (201-1000)", "Large (1000+)"]
 
 
 @st.cache_resource
@@ -92,7 +99,7 @@ def load_conformal_predictor():
     if CONFORMAL_SUMMARY_PATH.exists():
         with open(CONFORMAL_SUMMARY_PATH) as f:
             summary = json.load(f)
-            return summary.get('q_hat'), summary.get('alpha', 0.1)
+            return summary.get("q_hat"), summary.get("alpha", 0.1)
     return None, None
 
 
@@ -109,60 +116,49 @@ def create_input_form() -> dict[str, Any]:
     with col1:
         years_experience = st.slider(
             "Years of Experience",
-            min_value=0.0, max_value=30.0, value=5.0, step=0.5,
-            help="Total years of professional experience"
+            min_value=0.0,
+            max_value=30.0,
+            value=5.0,
+            step=0.5,
+            help="Total years of professional experience",
         )
         education_level = st.selectbox(
-            "Education Level",
-            EDUCATION_LEVELS,
-            index=1,
-            help="Highest level of education completed"
+            "Education Level", EDUCATION_LEVELS, index=1, help="Highest level of education completed"
         )
         skills_count = st.number_input(
-            "Number of Relevant Skills",
-            min_value=1, max_value=20, value=5,
-            help="Count of relevant technical skills"
+            "Number of Relevant Skills", min_value=1, max_value=20, value=5, help="Count of relevant technical skills"
         )
-        job_role = st.selectbox(
-            "Job Role",
-            JOB_ROLES,
-            index=0,
-            help="Target job role"
-        )
+        job_role = st.selectbox("Job Role", JOB_ROLES, index=0, help="Target job role")
 
     with col2:
         previous_salary = st.number_input(
             "Previous Salary ($)",
-            min_value=30000, max_value=500000, value=120000, step=5000,
-            help="Candidate's most recent salary"
+            min_value=30000,
+            max_value=500000,
+            value=120000,
+            step=5000,
+            help="Candidate's most recent salary",
         )
         interview_score = st.slider(
             "Interview Score (1-10)",
-            min_value=1.0, max_value=10.0, value=7.0, step=0.5,
-            help="Composite interview evaluation score"
+            min_value=1.0,
+            max_value=10.0,
+            value=7.0,
+            step=0.5,
+            help="Composite interview evaluation score",
         )
-        location = st.selectbox(
-            "Job Location",
-            LOCATIONS,
-            index=5,
-            help="Work location"
-        )
-        company_size = st.selectbox(
-            "Company Size",
-            COMPANY_SIZES,
-            index=1,
-            help="Size of the hiring company"
-        )
+        location = st.selectbox("Job Location", LOCATIONS, index=5, help="Work location")
+        company_size = st.selectbox("Company Size", COMPANY_SIZES, index=1, help="Size of the hiring company")
 
     return {
-        'years_experience': years_experience,
-        'education_level': education_level,
-        'skills_count': skills_count,
-        'job_role': job_role,
-        'previous_salary': previous_salary,
-        'interview_score': interview_score,
-        'location': location,
-        'company_size': company_size,
+        "years_experience": years_experience,
+        "education_level": education_level,
+        "skills_count": skills_count,
+        "job_role": job_role,
+        "previous_salary": previous_salary,
+        "interview_score": interview_score,
+        "location": location,
+        "company_size": company_size,
     }
 
 
@@ -211,14 +207,14 @@ def get_shap_explanation(model, input_data: dict) -> dict[str, Any]:
     X = pd.DataFrame([input_data])[ALL_FEATURES]
 
     # Handle both Pipeline and StackingEnsemble/VotingEnsemble
-    if hasattr(model, 'named_steps'):
+    if hasattr(model, "named_steps"):
         # Pipeline model
-        preprocessor = model.named_steps['preprocessor']
-        regressor = model.named_steps['model']
-    elif hasattr(model, 'estimators_'):
+        preprocessor = model.named_steps["preprocessor"]
+        regressor = model.named_steps["model"]
+    elif hasattr(model, "estimators_"):
         # Ensemble - use first estimator's preprocessor
         first_estimator = model.estimators_[0]
-        preprocessor = first_estimator.named_steps['preprocessor']
+        preprocessor = first_estimator.named_steps["preprocessor"]
         regressor = model  # Use full ensemble for predictions
     else:
         raise ValueError(f"Unsupported model type: {type(model)}")
@@ -226,12 +222,12 @@ def get_shap_explanation(model, input_data: dict) -> dict[str, Any]:
     X_transformed = preprocessor.transform(X)
 
     # Get feature names after encoding
-    cat_encoder = preprocessor.named_transformers_['cat'].named_steps['encoder']
+    cat_encoder = preprocessor.named_transformers_["cat"].named_steps["encoder"]
     cat_feature_names = cat_encoder.get_feature_names_out(CATEGORICAL_FEATURES).tolist()
     feature_names = NUMERICAL_FEATURES + cat_feature_names
 
     # Create explainer based on model type
-    if hasattr(regressor, 'coef_'):
+    if hasattr(regressor, "coef_"):
         # Linear model
         explainer = shap.LinearExplainer(regressor, X_transformed, feature_names=feature_names)
         shap_values = explainer.shap_values(X_transformed)
@@ -242,24 +238,25 @@ def get_shap_explanation(model, input_data: dict) -> dict[str, Any]:
         base_value = explainer.expected_value
         if isinstance(base_value, np.ndarray):
             base_value = base_value[0] if len(base_value) > 0 else 0
-    elif hasattr(regressor, 'estimators_'):
+    elif hasattr(regressor, "estimators_"):
         # Ensemble - use precomputed global SHAP values from training
         # Load precomputed SHAP analysis
         import json
-        shap_analysis_path = 'models/shap_analysis.json'
+
+        shap_analysis_path = "models/shap_analysis.json"
         if os.path.exists(shap_analysis_path):
             with open(shap_analysis_path) as f:
                 shap_data = json.load(f)
-            
+
             # Use global feature importance
-            global_importance = shap_data.get('global_importance', {})
+            global_importance = shap_data.get("global_importance", {})
             shap_values = np.array([global_importance.get(f, 0) for f in feature_names])
-            base_value = float(shap_data.get('expected_value', 0))
+            base_value = float(shap_data.get("expected_value", 0))
         else:
             # Fallback: use mean prediction as base value
             shap_values = np.zeros(len(feature_names))
             base_value = float(model.predict(X)[0])  # Use prediction as fallback
-    elif hasattr(regressor, 'tree_'):
+    elif hasattr(regressor, "tree_"):
         # Tree-based model
         explainer = shap.TreeExplainer(regressor, X_transformed, feature_names=feature_names)
         shap_values = explainer.shap_values(X_transformed)
@@ -283,18 +280,20 @@ def get_shap_explanation(model, input_data: dict) -> dict[str, Any]:
             base_value = base_value[0] if len(base_value) > 0 else 0
 
     # Create explanation dataframe
-    exp_df = pd.DataFrame({
-        'feature': feature_names,
-        'shap_value': shap_values,
-        'feature_value': X_transformed[0],
-    })
-    exp_df['abs_shap'] = exp_df['shap_value'].abs()
-    exp_df = exp_df.sort_values('abs_shap', ascending=False)
+    exp_df = pd.DataFrame(
+        {
+            "feature": feature_names,
+            "shap_value": shap_values,
+            "feature_value": X_transformed[0],
+        }
+    )
+    exp_df["abs_shap"] = exp_df["shap_value"].abs()
+    exp_df = exp_df.sort_values("abs_shap", ascending=False)
 
     return {
-        'base_value': float(base_value),
-        'prediction': float(model.predict(X)[0]),
-        'top_features': exp_df.head(10)[['feature', 'shap_value', 'feature_value']].to_dict('records'),
+        "base_value": float(base_value),
+        "prediction": float(model.predict(X)[0]),
+        "top_features": exp_df.head(10)[["feature", "shap_value", "feature_value"]].to_dict("records"),
     }
 
 
@@ -306,9 +305,9 @@ def plot_shap_waterfall(explanation: dict) -> None:
     """
     st.subheader("Why this prediction? (SHAP Explanation)")
 
-    base_value = explanation['base_value']
-    prediction = explanation['prediction']
-    top_features = explanation['top_features']
+    base_value = explanation["base_value"]
+    prediction = explanation["prediction"]
+    top_features = explanation["top_features"]
 
     # Summary metrics
     col1, col2, col3 = st.columns(3)
@@ -325,26 +324,32 @@ def plot_shap_waterfall(explanation: dict) -> None:
     # Create a horizontal bar chart
     features_df = pd.DataFrame(top_features)
     if not features_df.empty:
-        features_df = features_df.sort_values('shap_value', ascending=True)
+        features_df = features_df.sort_values("shap_value", ascending=True)
 
         # Color code: red for negative, green for positive
-        colors = ['#ff6b6b' if v < 0 else '#4ecb71' for v in features_df['shap_value']]
+        colors = ["#ff6b6b" if v < 0 else "#4ecb71" for v in features_df["shap_value"]]
 
         fig, ax = plt.subplots(figsize=(10, 6))
-        bars = ax.barh(range(len(features_df)), features_df['shap_value'], color=colors, edgecolor='black')
+        ax.barh(range(len(features_df)), features_df["shap_value"], color=colors, edgecolor="black")
         ax.set_yticks(range(len(features_df)))
-        ax.set_yticklabels(features_df['feature'])
-        ax.set_xlabel('SHAP Value (Impact on Salary)')
-        ax.set_title('Feature Contributions to Prediction')
-        ax.axvline(x=0, color='black', linewidth=0.5)
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
+        ax.set_yticklabels(features_df["feature"])
+        ax.set_xlabel("SHAP Value (Impact on Salary)")
+        ax.set_title("Feature Contributions to Prediction")
+        ax.axvline(x=0, color="black", linewidth=0.5)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
         # Add value labels
         for i, (_, row) in enumerate(features_df.iterrows()):
-            offset = 500 if row['shap_value'] >= 0 else -500
-            ax.text(row['shap_value'] + offset, i, f"${row['shap_value']:+,.0f}",
-                    va='center', ha='left' if row['shap_value'] >= 0 else 'right', fontsize=9)
+            offset = 500 if row["shap_value"] >= 0 else -500
+            ax.text(
+                row["shap_value"] + offset,
+                i,
+                f"${row['shap_value']:+,.0f}",
+                va="center",
+                ha="left" if row["shap_value"] >= 0 else "right",
+                fontsize=9,
+            )
 
         plt.tight_layout()
         st.pyplot(fig)
@@ -352,9 +357,9 @@ def plot_shap_waterfall(explanation: dict) -> None:
 
     # Detailed table
     with st.expander("View detailed feature contributions"):
-        display_df = features_df[['feature', 'shap_value', 'feature_value']].copy()
-        display_df.columns = ['Feature', 'SHAP Value', 'Feature Value']
-        display_df['SHAP Value'] = display_df['SHAP Value'].apply(lambda x: f"${x:+,.0f}")
+        display_df = features_df[["feature", "shap_value", "feature_value"]].copy()
+        display_df.columns = ["Feature", "SHAP Value", "Feature Value"]
+        display_df["SHAP Value"] = display_df["SHAP Value"].apply(lambda x: f"${x:+,.0f}")
         st.dataframe(display_df, use_container_width=True, hide_index=True)
 
 
@@ -387,11 +392,15 @@ def single_prediction_page():
 
         q_hat, alpha = load_conformal_predictor()
         if q_hat is not None:
-            st.caption(f"Prediction interval using conformal prediction (q̂ = ${q_hat:,.0f}, {coverage:.0%} nominal coverage). "
-                       "Actual offer should consider budget, equity, benefits, and market conditions.")
+            st.caption(
+                f"Prediction interval using conformal prediction (q̂ = ${q_hat:,.0f}, {coverage:.0%} nominal coverage). "
+                "Actual offer should consider budget, equity, benefits, and market conditions."
+            )
         else:
-            st.caption("Prediction interval based on model RMSE (~$22,651). "
-                       "Actual offer should consider budget, equity, benefits, and market conditions.")
+            st.caption(
+                "Prediction interval based on model RMSE (~$22,651). "
+                "Actual offer should consider budget, equity, benefits, and market conditions."
+            )
 
         # SHAP Explanation
         st.markdown("---")
@@ -419,33 +428,27 @@ def batch_prediction_page():
     template_df = pd.DataFrame(columns=ALL_FEATURES)
     template_csv = template_df.to_csv(index=False)
     st.download_button(
-        "Download CSV Template",
-        template_csv,
-        "salary_prediction_template.csv",
-        "text/csv",
-        use_container_width=True
+        "Download CSV Template", template_csv, "salary_prediction_template.csv", "text/csv", use_container_width=True
     )
 
     # Example data
     with st.expander("View example data format"):
         example_data = {
-            'years_experience': [5.0, 3.0, 10.0],
-            'education_level': ['Bachelor', 'Master', 'PhD'],
-            'skills_count': [5, 7, 10],
-            'job_role': ['Software Engineer', 'Data Scientist', 'ML Engineer'],
-            'previous_salary': [120000, 110000, 140000],
-            'interview_score': [7.5, 8.0, 9.0],
-            'location': ['San Francisco', 'Remote', 'New York'],
-            'company_size': ['Large (1000+)', 'Startup (1-50)', 'Medium (201-1000)'],
+            "years_experience": [5.0, 3.0, 10.0],
+            "education_level": ["Bachelor", "Master", "PhD"],
+            "skills_count": [5, 7, 10],
+            "job_role": ["Software Engineer", "Data Scientist", "ML Engineer"],
+            "previous_salary": [120000, 110000, 140000],
+            "interview_score": [7.5, 8.0, 9.0],
+            "location": ["San Francisco", "Remote", "New York"],
+            "company_size": ["Large (1000+)", "Startup (1-50)", "Medium (201-1000)"],
         }
         st.dataframe(pd.DataFrame(example_data), use_container_width=True)
 
     # File upload
     st.subheader("2. Upload Your CSV")
     uploaded_file = st.file_uploader(
-        "Choose a CSV file",
-        type="csv",
-        help=f"CSV must contain columns: {', '.join(ALL_FEATURES)}"
+        "Choose a CSV file", type="csv", help=f"CSV must contain columns: {', '.join(ALL_FEATURES)}"
     )
 
     if uploaded_file is not None:
@@ -483,9 +486,11 @@ def batch_prediction_page():
 
                     # Add predictions to dataframe
                     results_df = df.copy()
-                    results_df['predicted_salary'] = predictions.round(0).astype(int)
-                    results_df[f'salary_lower_{interval_label}'] = (predictions - margin).clip(lower=0).round(0).astype(int)
-                    results_df[f'salary_upper_{interval_label}'] = (predictions + margin).round(0).astype(int)
+                    results_df["predicted_salary"] = predictions.round(0).astype(int)
+                    results_df[f"salary_lower_{interval_label}"] = (
+                        (predictions - margin).clip(lower=0).round(0).astype(int)
+                    )
+                    results_df[f"salary_upper_{interval_label}"] = (predictions + margin).round(0).astype(int)
 
                 st.success("Predictions generated!")
 
@@ -496,11 +501,7 @@ def batch_prediction_page():
                 # Download
                 csv = results_df.to_csv(index=False)
                 st.download_button(
-                    "Download Predictions CSV",
-                    csv,
-                    "salary_predictions.csv",
-                    "text/csv",
-                    use_container_width=True
+                    "Download Predictions CSV", csv, "salary_predictions.csv", "text/csv", use_container_width=True
                 )
 
                 # Summary stats
@@ -516,12 +517,14 @@ def batch_prediction_page():
                     st.metric("Max Predicted", f"${results_df['predicted_salary'].max():,.0f}")
 
                 if q_hat is not None:
-                    st.caption(f"Prediction intervals using conformal prediction (q̂ = ${q_hat:,.0f}, {coverage:.0%} nominal coverage).")
+                    st.caption(
+                        f"Prediction intervals using conformal prediction (q̂ = ${q_hat:,.0f}, {coverage:.0%} nominal coverage)."
+                    )
                 else:
                     st.caption("Prediction intervals based on model RMSE (~$22,651).")
 
         except Exception as e:
-            st.error(f"Error processing file: {str(e)}")
+            st.error(f"Error processing file: {e!s}")
 
 
 def about_page():
@@ -609,11 +612,13 @@ def about_page():
 
         # Show intersectional analysis summary
         with st.expander("View Intersectional Analysis (Gender × Age Group)"):
-            if 'intersectional_metrics' in audit:
-                df_inter = pd.DataFrame(audit['intersectional_metrics'])
+            if "intersectional_metrics" in audit:
+                df_inter = pd.DataFrame(audit["intersectional_metrics"])
                 # Convert group list to string for display
-                if 'group' in df_inter.columns:
-                    df_inter['group'] = df_inter['group'].apply(lambda x: ' × '.join(x) if isinstance(x, list) else str(x))
+                if "group" in df_inter.columns:
+                    df_inter["group"] = df_inter["group"].apply(
+                        lambda x: " × ".join(x) if isinstance(x, list) else str(x)
+                    )
                 st.dataframe(df_inter, use_container_width=True, hide_index=True)
     else:
         st.warning("Fairness audit results not found. Run `python src/fairness.py` to generate.")
@@ -631,9 +636,9 @@ def about_page():
     """)
 
     shap_analysis = load_shap_analysis()
-    if shap_analysis and 'global_importance' in shap_analysis:
+    if shap_analysis and "global_importance" in shap_analysis:
         with st.expander("View Global Feature Importance"):
-            imp_df = pd.DataFrame(shap_analysis['global_importance'])
+            imp_df = pd.DataFrame(shap_analysis["global_importance"])
             st.dataframe(imp_df, use_container_width=True, hide_index=True)
 
     st.markdown("---")
@@ -711,5 +716,5 @@ def main():
         about_page()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

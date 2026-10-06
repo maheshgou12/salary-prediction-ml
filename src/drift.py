@@ -3,6 +3,7 @@
 Implements Population Stability Index (PSI), Kolmogorov-Smirnov test,
 and other drift detection methods for monitoring model inputs and predictions.
 """
+
 from __future__ import annotations
 
 import json
@@ -13,8 +14,7 @@ from typing import Any
 import joblib
 import numpy as np
 import pandas as pd
-from scipy import stats
-from scipy.stats import ks_2samp, chi2_contingency
+from scipy.stats import chi2_contingency, ks_2samp
 
 warnings.filterwarnings("ignore")
 
@@ -50,11 +50,12 @@ def population_stability_index(
     bins: int = 10,
 ) -> float:
     """Calculate Population Stability Index (PSI) between two distributions.
-    
+
     PSI < 0.1: No significant drift
     0.1 <= PSI < 0.25: Moderate drift
     PSI >= 0.25: Significant drift
     """
+
     def _hist_percents(arr, bins):
         hist, bin_edges = np.histogram(arr, bins=bins, density=False)
         percs = hist / len(arr)
@@ -71,16 +72,16 @@ def population_stability_index(
 def psi_categorical(expected: pd.Series, actual: pd.Series) -> float:
     """Calculate PSI for categorical features using category proportions."""
     all_categories = set(expected.unique()) | set(actual.unique())
-    
+
     expected_counts = expected.value_counts()
     actual_counts = actual.value_counts()
-    
+
     expected_props = expected_counts / len(expected)
     actual_props = actual_counts / len(actual)
-    
+
     expected_props = expected_props.reindex(all_categories).fillna(0.0001)
     actual_props = actual_props.reindex(all_categories).fillna(0.0001)
-    
+
     psi = np.sum((actual_props - expected_props) * np.log(actual_props / expected_props))
     return float(psi)
 
@@ -116,7 +117,7 @@ def calculate_drift_metrics(
     if features is None:
         features = ALL_FEATURES
 
-    results = {
+    results: dict[str, Any] = {
         "numerical_features": {},
         "categorical_features": {},
         "overall_drift_score": 0.0,
@@ -140,20 +141,16 @@ def calculate_drift_metrics(
         if feature in NUMERICAL_FEATURES:
             psi_val = population_stability_index(ref_data.values, cur_data.values)
             ks_result = ks_test_drift(ref_data.values, cur_data.values)
-            
+
             drift_score = max(psi_val, ks_result["ks_statistic"])
             numerical_drifts.append(drift_score)
-            
+
             results["numerical_features"][feature] = {
                 "psi": psi_val,
                 "ks_statistic": ks_result["ks_statistic"],
                 "ks_p_value": ks_result["p_value"],
                 "ks_drift_detected": ks_result["drift_detected"],
-                "drift_level": (
-                    "high" if psi_val >= 0.25 else
-                    "moderate" if psi_val >= 0.1 else
-                    "low"
-                ),
+                "drift_level": ("high" if psi_val >= 0.25 else "moderate" if psi_val >= 0.1 else "low"),
             }
 
             if psi_val >= 0.1 or ks_result["drift_detected"]:
@@ -162,19 +159,15 @@ def calculate_drift_metrics(
         elif feature in CATEGORICAL_FEATURES:
             psi_val = psi_categorical(ref_data, cur_data)
             chi2_result = chi2_test_drift(ref_data, cur_data)
-            
+
             categorical_drifts.append(psi_val)
-            
+
             results["categorical_features"][feature] = {
                 "psi": psi_val,
                 "chi2_statistic": chi2_result["chi2_statistic"],
                 "chi2_p_value": chi2_result["p_value"],
                 "chi2_drift_detected": chi2_result["drift_detected"],
-                "drift_level": (
-                    "high" if psi_val >= 0.25 else
-                    "moderate" if psi_val >= 0.1 else
-                    "low"
-                ),
+                "drift_level": ("high" if psi_val >= 0.25 else "moderate" if psi_val >= 0.1 else "low"),
             }
 
             if psi_val >= 0.1 or chi2_result["drift_detected"]:
@@ -195,7 +188,7 @@ def prediction_drift(
     """Detect drift in model predictions."""
     psi_val = population_stability_index(reference_preds, current_preds)
     ks_result = ks_test_drift(reference_preds, current_preds)
-    
+
     return {
         "prediction_psi": psi_val,
         "prediction_ks_statistic": ks_result["ks_statistic"],
@@ -221,7 +214,7 @@ def run_drift_detection(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     reference_df = load_data(reference_data_path)
-    
+
     if current_data_path and Path(current_data_path).exists():
         current_df = load_data(current_data_path)
     else:

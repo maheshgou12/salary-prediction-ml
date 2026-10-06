@@ -32,7 +32,7 @@
     },
     "categorical_features": {
       "education_level": {
-        "psi": 0.0015269636317058238,
+        "psi": 0.0015269636317058236,
         "chi2_statistic": 3000.0,
         "chi2_p_value": 0.0,
         "chi2_drift_detected": "True",
@@ -72,17 +72,17 @@
     ]
   },
   "prediction_drift": {
-    "prediction_psi": 0.04392101979172903,
-    "prediction_ks_statistic": 0.0248,
-    "prediction_ks_p_value": 0.6782919151382233,
+    "prediction_psi": 0.05364047012819173,
+    "prediction_ks_statistic": 0.0244,
+    "prediction_ks_p_value": 0.6976789740074991,
     "prediction_drift_detected": "False",
-    "reference_mean": 204261.3278048633,
-    "current_mean": 204123.3176230208,
-    "reference_std": 59402.97957201041,
-    "current_std": 58568.40648699996,
-    "mean_shift": -138.01018184251734
+    "reference_mean": 203924.76707181975,
+    "current_mean": 203784.87254483902,
+    "reference_std": 59582.28255817805,
+    "current_std": 58702.507494422345,
+    "mean_shift": -139.89452698073
   },
   "reference_size": 5000,
   "current_size": 1000,
-  "timestamp": "2026-10-06T09:45:01.844399"
+  "timestamp": "2026-10-06T14:13:08.373140"
 }

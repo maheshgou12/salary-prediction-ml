@@ -1,11 +1,11 @@
 {
   "alpha": 0.1,
   "nominal_coverage": 0.9,
-  "q_hat": 22333.404379797576,
+  "q_hat": 21561.907414699468,
   "calibration_size": 1000,
   "test_size": 1000,
   "calibration_coverage": 0.902,
-  "test_coverage": 0.817,
-  "test_coverage_gap": -0.08300000000000007,
-  "avg_interval_width": 44666.80875959515
+  "test_coverage": 0.798,
+  "test_coverage_gap": -0.10199999999999998,
+  "avg_interval_width": 43123.814829398936
 }

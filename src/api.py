@@ -1,6 +1,7 @@
 """FairPay FastAPI REST API.
 Production-ready API with async endpoints, validation, and monitoring.
 """
+
 from __future__ import annotations
 
 import json
@@ -14,26 +15,24 @@ from typing import Any
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Depends
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from prometheus_client import Counter, Gauge, Histogram, generate_latest
 from pydantic import BaseModel, Field, field_validator
-from prometheus_client import Counter, Histogram, Gauge, generate_latest
 from starlette.responses import Response
 
-from src.train import ALL_FEATURES, NUMERICAL_FEATURES, CATEGORICAL_FEATURES
 from src.database import (
-    log_prediction,
-    log_batch_prediction,
-    log_model_metrics,
-    log_audit,
-    get_prediction_history,
+    get_audit_log,
     get_batch_history,
     get_model_metrics_history,
-    get_audit_log,
+    get_prediction_history,
     get_prediction_stats,
     init_database,
+    log_audit,
+    log_batch_prediction,
+    log_prediction,
 )
+from src.train import ALL_FEATURES, CATEGORICAL_FEATURES
 from src.uncertainty import ConformalPredictor
 
 logging.basicConfig(level=logging.INFO)
@@ -45,7 +44,7 @@ CONFORMAL_PATH = Path("models/conformal_summary.json")
 model = None
 conformal_predictor = None
 model_version = "1.0.0"
-model_metadata = {}
+model_metadata: dict = {}
 
 PREDICTION_COUNTER = Counter("fairpay_predictions_total", "Total predictions", ["endpoint", "status"])
 PREDICTION_LATENCY = Histogram("fairpay_prediction_latency_seconds", "Prediction latency")
@@ -75,9 +74,16 @@ class CandidateInput(BaseModel):
     @classmethod
     def validate_role(cls, v):
         allowed = [
-            "Software Engineer", "Data Scientist", "ML Engineer", "DevOps Engineer",
-            "Frontend Developer", "Backend Developer", "Full Stack Developer",
-            "Data Analyst", "Product Manager", "Engineering Manager"
+            "Software Engineer",
+            "Data Scientist",
+            "ML Engineer",
+            "DevOps Engineer",
+            "Frontend Developer",
+            "Backend Developer",
+            "Full Stack Developer",
+            "Data Analyst",
+            "Product Manager",
+            "Engineering Manager",
         ]
         if v not in allowed:
             raise ValueError(f"job_role must be one of {allowed}")
@@ -144,9 +150,9 @@ def load_model_and_conformal():
     global model, conformal_predictor, model_metadata
     try:
         model = joblib.load(MODEL_PATH)
-        if hasattr(model, 'named_steps'):
-            model_type = type(model.named_steps['model']).__name__
-        elif hasattr(model, 'estimators_'):
+        if hasattr(model, "named_steps"):
+            model_type = type(model.named_steps["model"]).__name__
+        elif hasattr(model, "estimators_"):
             model_type = f"StackingEnsemble({type(model.estimators_[0].named_steps['model']).__name__} + ...)"
         else:
             model_type = type(model).__name__
@@ -234,11 +240,11 @@ async def model_info():
     if model is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
-    if hasattr(model, 'named_steps'):
+    if hasattr(model, "named_steps"):
         regressor = model.named_steps["model"]
         model_type = type(regressor).__name__
-    elif hasattr(model, 'estimators_'):
-        regressor = model.estimators_[0].named_steps['model']
+    elif hasattr(model, "estimators_"):
+        regressor = model.estimators_[0].named_steps["model"]
         model_type = f"StackingEnsemble({type(regressor).__name__} + ...)"
     else:
         model_type = type(model).__name__
@@ -345,19 +351,21 @@ async def predict_batch(batch: BatchPredictionRequest, background_tasks: Backgro
             pred_val = float(pred)
             lower = max(0, pred_val - margin)
             upper = pred_val + margin
-            results.append(SalaryPrediction(
-                predicted_salary=int(round(pred_val)),
-                lower_bound=int(round(lower)),
-                upper_bound=int(round(upper)),
-                confidence_level=coverage,
-                model_version=model_version,
-                prediction_id=f"{batch_id}-{i}",
-            ))
+            results.append(
+                SalaryPrediction(
+                    predicted_salary=int(round(pred_val)),
+                    lower_bound=int(round(lower)),
+                    upper_bound=int(round(upper)),
+                    confidence_level=coverage,
+                    model_version=model_version,
+                    prediction_id=f"{batch_id}-{i}",
+                )
+            )
 
-        summary = {
+        summary: dict[str, float] = {
             "count": len(results),
-            "mean_predicted": np.mean([r.predicted_salary for r in results]),
-            "median_predicted": np.median([r.predicted_salary for r in results]),
+            "mean_predicted": float(np.mean([r.predicted_salary for r in results])),
+            "median_predicted": float(np.median([r.predicted_salary for r in results])),
             "min_predicted": min(r.predicted_salary for r in results),
             "max_predicted": max(r.predicted_salary for r in results),
         }
@@ -366,7 +374,7 @@ async def predict_batch(batch: BatchPredictionRequest, background_tasks: Backgro
             log_batch_prediction,
             f"batch_{batch_id}.csv",
             len(candidates_data),
-            summary["mean_predicted"],
+            float(summary["mean_predicted"]),
             "completed",
             None,
         )
@@ -421,6 +429,7 @@ async def trigger_retrain(background_tasks: BackgroundTasks):
 
 async def run_retrain():
     import subprocess
+
     try:
         logger.info("Starting model retraining...")
         result = subprocess.run(
@@ -443,4 +452,5 @@ async def run_retrain():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
