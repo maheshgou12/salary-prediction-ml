@@ -1,0 +1,498 @@
+{
+  "feature_names": [
+    "years_experience",
+    "skills_count",
+    "previous_salary",
+    "interview_score",
+    "education_level",
+    "job_role",
+    "location",
+    "company_size"
+  ],
+  "global_importance": [
+    {
+      "feature": "years_experience",
+      "mean_abs_shap": 18757.580320983274
+    },
+    {
+      "feature": "location",
+      "mean_abs_shap": 17258.340226818633
+    },
+    {
+      "feature": "education_level",
+      "mean_abs_shap": 16632.0416378021
+    },
+    {
+      "feature": "company_size",
+      "mean_abs_shap": 15447.577510032197
+    },
+    {
+      "feature": "job_role",
+      "mean_abs_shap": 15368.232762566326
+    },
+    {
+      "feature": "interview_score",
+      "mean_abs_shap": 10439.915648244269
+    },
+    {
+      "feature": "previous_salary",
+      "mean_abs_shap": 7631.838682270834
+    },
+    {
+      "feature": "skills_count",
+      "mean_abs_shap": 671.8770462680864
+    }
+  ],
+  "local_explanations": [
+    {
+      "base_value": 202306.35543058423,
+      "prediction": 120549.93235229037,
+      "top_features": [
+        {
+          "feature": "education_level",
+          "shap_value": -32850.18054286619,
+          "feature_value": "High School"
+        },
+        {
+          "feature": "location",
+          "shap_value": -25005.90088869178,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": -23476.689843124524,
+          "feature_value": "Startup (1-50)"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 17493.37171329683,
+          "feature_value": "Product Manager"
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -14790.460913932668,
+          "feature_value": 103000.0
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -7586.041251183027,
+          "feature_value": 3.3
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 4226.977256392804,
+          "feature_value": 7.5
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 232.5013918147015,
+          "feature_value": 1.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -7586.041251183027,
+          "feature_value": 3.3
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 232.5013918147015,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -14790.460913932668,
+          "feature_value": 103000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 4226.977256392804,
+          "feature_value": 7.5
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -32850.18054286619,
+          "feature_value": "High School"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 17493.37171329683,
+          "feature_value": "Product Manager"
+        },
+        {
+          "feature": "location",
+          "shap_value": -25005.90088869178,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": -23476.689843124524,
+          "feature_value": "Startup (1-50)"
+        }
+      ],
+      "sample_index": 0,
+      "actual_salary": 122000.0
+    },
+    {
+      "base_value": 202306.35543058423,
+      "prediction": 139808.87394635653,
+      "top_features": [
+        {
+          "feature": "location",
+          "shap_value": -25447.654126855992,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -22357.11372607976,
+          "feature_value": 0.4
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 11561.265140393883,
+          "feature_value": "Data Scientist"
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -10109.71483084716,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -8571.211016984449,
+          "feature_value": 121000.0
+        },
+        {
+          "feature": "company_size",
+          "shap_value": -7611.390261257794,
+          "feature_value": "Small (51-200)"
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 730.162045349658,
+          "feature_value": 7.0
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -691.8247079460829,
+          "feature_value": 2.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -22357.11372607976,
+          "feature_value": 0.4
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -691.8247079460829,
+          "feature_value": 2.0
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -8571.211016984449,
+          "feature_value": 121000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 730.162045349658,
+          "feature_value": 7.0
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -10109.71483084716,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 11561.265140393883,
+          "feature_value": "Data Scientist"
+        },
+        {
+          "feature": "location",
+          "shap_value": -25447.654126855992,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": -7611.390261257794,
+          "feature_value": "Small (51-200)"
+        }
+      ],
+      "sample_index": 1,
+      "actual_salary": 161000.0
+    },
+    {
+      "base_value": 202306.35543058423,
+      "prediction": 194416.03697483058,
+      "top_features": [
+        {
+          "feature": "company_size",
+          "shap_value": 23923.022577673804,
+          "feature_value": "Large (1000+)"
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -22311.402950645606,
+          "feature_value": 0.3
+        },
+        {
+          "feature": "location",
+          "shap_value": -19512.653322541908,
+          "feature_value": "Chicago"
+        },
+        {
+          "feature": "education_level",
+          "shap_value": 12590.837518699112,
+          "feature_value": "Master"
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -8441.628419445393,
+          "feature_value": 5.8
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 5516.19854448752,
+          "feature_value": "DevOps Engineer"
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 646.7509142214988,
+          "feature_value": 180000.0
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -301.4433182026769,
+          "feature_value": 8.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -22311.402950645606,
+          "feature_value": 0.3
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -301.4433182026769,
+          "feature_value": 8.0
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 646.7509142214988,
+          "feature_value": 180000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -8441.628419445393,
+          "feature_value": 5.8
+        },
+        {
+          "feature": "education_level",
+          "shap_value": 12590.837518699112,
+          "feature_value": "Master"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 5516.19854448752,
+          "feature_value": "DevOps Engineer"
+        },
+        {
+          "feature": "location",
+          "shap_value": -19512.653322541908,
+          "feature_value": "Chicago"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": 23923.022577673804,
+          "feature_value": "Large (1000+)"
+        }
+      ],
+      "sample_index": 2,
+      "actual_salary": 173000.0
+    },
+    {
+      "base_value": 202306.35543058423,
+      "prediction": 172353.54036004934,
+      "top_features": [
+        {
+          "feature": "location",
+          "shap_value": -28818.827880668294,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 26869.138953155274,
+          "feature_value": "ML Engineer"
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -13849.386343973398,
+          "feature_value": 2.2
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -9791.211693045403,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": 8313.374089421382,
+          "feature_value": "Medium (201-1000)"
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -7284.334562031286,
+          "feature_value": 151000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -5170.716187945844,
+          "feature_value": 6.2
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -220.85144544731884,
+          "feature_value": NaN
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -13849.386343973398,
+          "feature_value": 2.2
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -220.85144544731884,
+          "feature_value": NaN
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -7284.334562031286,
+          "feature_value": 151000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -5170.716187945844,
+          "feature_value": 6.2
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -9791.211693045403,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": 26869.138953155274,
+          "feature_value": "ML Engineer"
+        },
+        {
+          "feature": "location",
+          "shap_value": -28818.827880668294,
+          "feature_value": "Remote"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": 8313.374089421382,
+          "feature_value": "Medium (201-1000)"
+        }
+      ],
+      "sample_index": 3,
+      "actual_salary": 157000.0
+    },
+    {
+      "base_value": 202306.35543058423,
+      "prediction": 316576.8816426208,
+      "top_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": 79740.46834265953,
+          "feature_value": 23.0
+        },
+        {
+          "feature": "company_size",
+          "shap_value": 21770.307892577403,
+          "feature_value": "Large (1000+)"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": -20343.11208190694,
+          "feature_value": "Frontend Developer"
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 18708.930954341806,
+          "feature_value": 289000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 13452.324720620474,
+          "feature_value": 8.6
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -11057.468884110747,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "location",
+          "shap_value": 8627.69608843673,
+          "feature_value": "Seattle"
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 3371.3791794182907,
+          "feature_value": 10.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": 79740.46834265953,
+          "feature_value": 23.0
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 3371.3791794182907,
+          "feature_value": 10.0
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 18708.930954341806,
+          "feature_value": 289000.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": 13452.324720620474,
+          "feature_value": 8.6
+        },
+        {
+          "feature": "education_level",
+          "shap_value": -11057.468884110747,
+          "feature_value": "Bachelor"
+        },
+        {
+          "feature": "job_role",
+          "shap_value": -20343.11208190694,
+          "feature_value": "Frontend Developer"
+        },
+        {
+          "feature": "location",
+          "shap_value": 8627.69608843673,
+          "feature_value": "Seattle"
+        },
+        {
+          "feature": "company_size",
+          "shap_value": 21770.307892577403,
+          "feature_value": "Large (1000+)"
+        }
+      ],
+      "sample_index": 4,
+      "actual_salary": 301000.0
+    }
+  ]
+}

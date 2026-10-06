@@ -23,10 +23,10 @@ Thumbs.db
 data/*.csv
 !data/generate_data.py
 
-# Model files
-models/*.joblib
-models/*.json
-models/*.png
+# Model files - allow model artifacts for deployment
+# models/*.joblib
+# models/*.json
+# models/*.png
 
 # Logs
 *.log
@@ -58,3 +58,7 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# MLflow
+mlruns/
+catboost_info/
