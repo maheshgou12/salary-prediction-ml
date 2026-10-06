@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/9fcc5850907e4708b17a8570ceb6c89d/artifacts
+end_time: 1790849521023
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: 9fcc5850907e4708b17a8570ceb6c89d
+run_name: CatBoost
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1790849520259
+status: 4
+tags: []
+user_id: Welcome

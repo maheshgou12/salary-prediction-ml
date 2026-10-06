@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/ab6915522efe45d284b0fba00831b958/artifacts
+end_time: 1791259404347
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: ab6915522efe45d284b0fba00831b958
+run_name: Ridge Regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791259403554
+status: 4
+tags: []
+user_id: Welcome

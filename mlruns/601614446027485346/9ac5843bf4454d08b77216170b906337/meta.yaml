@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/9ac5843bf4454d08b77216170b906337/artifacts
+end_time: 1791259827818
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: 9ac5843bf4454d08b77216170b906337
+run_name: Linear Regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791259823871
+status: 4
+tags: []
+user_id: Welcome

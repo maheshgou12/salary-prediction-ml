@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/a611ba1d62004fe5b6c9ac2cdf6bad25/artifacts
+end_time: 1791089108073
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: a611ba1d62004fe5b6c9ac2cdf6bad25
+run_name: XGBoost
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791089107224
+status: 4
+tags: []
+user_id: Welcome

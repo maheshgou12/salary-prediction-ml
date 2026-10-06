@@ -1,0 +1,1208 @@
+{
+  "feature_names": [
+    "years_experience",
+    "skills_count",
+    "previous_salary",
+    "interview_score",
+    "education_level_Bachelor",
+    "education_level_High School",
+    "education_level_Master",
+    "education_level_PhD",
+    "job_role_Backend Developer",
+    "job_role_Data Analyst",
+    "job_role_Data Scientist",
+    "job_role_DevOps Engineer",
+    "job_role_Engineering Manager",
+    "job_role_Frontend Developer",
+    "job_role_Full Stack Developer",
+    "job_role_ML Engineer",
+    "job_role_Product Manager",
+    "job_role_Software Engineer",
+    "location_Austin",
+    "location_Boston",
+    "location_Chicago",
+    "location_Los Angeles",
+    "location_New York",
+    "location_Remote",
+    "location_San Francisco",
+    "location_Seattle",
+    "company_size_Large (1000+)",
+    "company_size_Medium (201-1000)",
+    "company_size_Small (51-200)",
+    "company_size_Startup (1-50)"
+  ],
+  "global_importance": [
+    {
+      "feature": "years_experience",
+      "mean_abs_shap": 20373.8979733142
+    },
+    {
+      "feature": "company_size_Startup (1-50)",
+      "mean_abs_shap": 9542.26073505231
+    },
+    {
+      "feature": "education_level_High School",
+      "mean_abs_shap": 9516.566658840438
+    },
+    {
+      "feature": "interview_score",
+      "mean_abs_shap": 9347.198888856054
+    },
+    {
+      "feature": "location_San Francisco",
+      "mean_abs_shap": 9032.242841641493
+    },
+    {
+      "feature": "previous_salary",
+      "mean_abs_shap": 8857.314807666036
+    },
+    {
+      "feature": "company_size_Large (1000+)",
+      "mean_abs_shap": 8292.98545002273
+    },
+    {
+      "feature": "job_role_Engineering Manager",
+      "mean_abs_shap": 7835.229425371231
+    },
+    {
+      "feature": "education_level_PhD",
+      "mean_abs_shap": 7365.1388386839235
+    },
+    {
+      "feature": "job_role_Data Analyst",
+      "mean_abs_shap": 7112.039349382883
+    },
+    {
+      "feature": "location_Remote",
+      "mean_abs_shap": 6568.774990862916
+    },
+    {
+      "feature": "education_level_Bachelor",
+      "mean_abs_shap": 6463.0546906375075
+    },
+    {
+      "feature": "location_New York",
+      "mean_abs_shap": 6197.646686693704
+    },
+    {
+      "feature": "education_level_Master",
+      "mean_abs_shap": 4466.605687056359
+    },
+    {
+      "feature": "job_role_Frontend Developer",
+      "mean_abs_shap": 3519.619969903659
+    },
+    {
+      "feature": "company_size_Small (51-200)",
+      "mean_abs_shap": 3488.114424411164
+    },
+    {
+      "feature": "location_Chicago",
+      "mean_abs_shap": 3359.6931663007144
+    },
+    {
+      "feature": "job_role_ML Engineer",
+      "mean_abs_shap": 3178.0299408733194
+    },
+    {
+      "feature": "company_size_Medium (201-1000)",
+      "mean_abs_shap": 2914.6755821221614
+    },
+    {
+      "feature": "location_Seattle",
+      "mean_abs_shap": 2456.6238120187454
+    },
+    {
+      "feature": "job_role_Backend Developer",
+      "mean_abs_shap": 2348.837579537046
+    },
+    {
+      "feature": "job_role_Product Manager",
+      "mean_abs_shap": 2026.0243158925375
+    },
+    {
+      "feature": "job_role_Software Engineer",
+      "mean_abs_shap": 2011.4672133856434
+    },
+    {
+      "feature": "job_role_Data Scientist",
+      "mean_abs_shap": 1924.481940702897
+    },
+    {
+      "feature": "location_Austin",
+      "mean_abs_shap": 1700.1782884394736
+    },
+    {
+      "feature": "job_role_Full Stack Developer",
+      "mean_abs_shap": 1138.4897181628091
+    },
+    {
+      "feature": "location_Los Angeles",
+      "mean_abs_shap": 854.6862186868585
+    },
+    {
+      "feature": "location_Boston",
+      "mean_abs_shap": 321.77776361886794
+    },
+    {
+      "feature": "skills_count",
+      "mean_abs_shap": 170.057685897485
+    },
+    {
+      "feature": "job_role_DevOps Engineer",
+      "mean_abs_shap": 90.37355092669041
+    }
+  ],
+  "local_explanations": [
+    {
+      "base_value": 213340.45351821856,
+      "prediction": 229746.0498630715,
+      "top_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": 18384.856609229566,
+          "feature_value": 0.8755278451305861
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": 7281.821009519127,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -5467.878344656012,
+          "feature_value": -0.45423330330410616
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": 18384.856609229566,
+          "feature_value": 0.8755278451305861
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -214.64186824421066,
+          "feature_value": 1.3023909026202867
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 4340.216941830745,
+          "feature_value": 0.5711479727243369
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -5467.878344656012,
+          "feature_value": -0.45423330330410616
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": 7281.821009519127,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_PhD",
+          "shap_value": -3518.3784261228793,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Backend Developer",
+          "shap_value": 1316.612993014036,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Analyst",
+          "shap_value": 3377.494942040748,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": -1184.0536960846298,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_DevOps Engineer",
+          "shap_value": 576.9316471843878,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Frontend Developer",
+          "shap_value": 1841.6616121589007,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Full Stack Developer",
+          "shap_value": 640.6807643009555,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_ML Engineer",
+          "shap_value": -1599.4111428652946,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": -1242.9597030015655,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Software Engineer",
+          "shap_value": 1175.532787043552,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": 780.102780484809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Boston",
+          "shap_value": -168.52885664395976,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Chicago",
+          "shap_value": 2009.3858650123746,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Los Angeles",
+          "shap_value": -4412.243240320815,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": -3010.364927776809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Remote",
+          "shap_value": 3500.330992015788,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Seattle",
+          "shap_value": -1785.83148893636,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": -2087.8764914915314,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        }
+      ],
+      "sample_index": 0,
+      "actual_salary": 213000.0
+    },
+    {
+      "base_value": 213340.45351821856,
+      "prediction": 231794.87116691127,
+      "top_features": [
+        {
+          "feature": "location_New York",
+          "shap_value": 20146.28836281403,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": -7355.126456586399,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": 5368.825263835366,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -4861.526129213534,
+          "feature_value": -0.08223201208887541
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -4861.526129213534,
+          "feature_value": -0.08223201208887541
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": -137.98405815699255,
+          "feature_value": 0.9280868639307374
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 1216.3540957087512,
+          "feature_value": 0.2673307091111451
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -4715.763029022443,
+          "feature_value": -0.3902883038947857
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": -7355.126456586399,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": -3271.5427723926514,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_PhD",
+          "shap_value": -3518.3784261228793,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Backend Developer",
+          "shap_value": 1316.612993014036,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Analyst",
+          "shap_value": 3377.494942040748,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_DevOps Engineer",
+          "shap_value": -43.42496269129801,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Frontend Developer",
+          "shap_value": 1841.6616121589007,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Full Stack Developer",
+          "shap_value": 640.6807643009555,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_ML Engineer",
+          "shap_value": -1599.4111428652946,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": -1242.9597030015655,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Software Engineer",
+          "shap_value": 1175.532787043552,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": 780.102780484809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Boston",
+          "shap_value": -168.52885664395976,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Chicago",
+          "shap_value": 2009.3858650123746,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Los Angeles",
+          "shap_value": 545.3334341969547,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": 20146.28836281403,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_Remote",
+          "shap_value": 3500.330992015788,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Seattle",
+          "shap_value": -1785.83148893636,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": 5368.825263835366,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": 2530.063654069982,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        }
+      ],
+      "sample_index": 1,
+      "actual_salary": 260000.0
+    },
+    {
+      "base_value": 213340.45351821856,
+      "prediction": 135951.81151821598,
+      "top_features": [
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": -19664.759570683804,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -19005.95402606016,
+          "feature_value": -1.6052432926718685
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -13957.936765995619,
+          "feature_value": -0.457007608392143
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": -10364.222655012461,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": -7355.126456586399,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -13957.936765995619,
+          "feature_value": -0.457007608392143
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 168.64718219187984,
+          "feature_value": -0.5691292908274598
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -4250.405885004737,
+          "feature_value": -0.26434950221194065
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -19005.95402606016,
+          "feature_value": -1.6052432926718685
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": -7355.126456586399,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": -3271.5427723926514,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_PhD",
+          "shap_value": -3518.3784261228793,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Backend Developer",
+          "shap_value": 1316.612993014036,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Analyst",
+          "shap_value": 3377.494942040748,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_DevOps Engineer",
+          "shap_value": -43.42496269129801,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Frontend Developer",
+          "shap_value": 1841.6616121589007,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Full Stack Developer",
+          "shap_value": 640.6807643009555,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_ML Engineer",
+          "shap_value": -1599.4111428652946,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": -1242.9597030015655,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Software Engineer",
+          "shap_value": 1175.532787043552,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": -10364.222655012461,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_Boston",
+          "shap_value": -168.52885664395976,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Chicago",
+          "shap_value": 2009.3858650123746,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Los Angeles",
+          "shap_value": 545.3334341969547,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": -3010.364927776809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Remote",
+          "shap_value": 3500.330992015788,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Seattle",
+          "shap_value": -1785.83148893636,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": -2087.8764914915314,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": 2530.063654069982,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": -19664.759570683804,
+          "feature_value": 1.0
+        }
+      ],
+      "sample_index": 2,
+      "actual_salary": 137000.0
+    },
+    {
+      "base_value": 213340.45351821856,
+      "prediction": 263653.0003753238,
+      "top_features": [
+        {
+          "feature": "education_level_PhD",
+          "shap_value": 35574.71519746467,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": 20146.28836281403,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "years_experience",
+          "shap_value": -17495.429791410872,
+          "feature_value": -0.6027536736211916
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 12149.874057135727,
+          "feature_value": 1.3306911317573165
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -7724.224291556701,
+          "feature_value": -0.6460683015320664
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": -17495.429791410872,
+          "feature_value": -0.6027536736211916
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 91.98937210466173,
+          "feature_value": -0.19482525213791047
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": 12149.874057135727,
+          "feature_value": 1.3306911317573165
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -7724.224291556701,
+          "feature_value": -0.6460683015320664
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": -3271.5427723926514,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_PhD",
+          "shap_value": 35574.71519746467,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Backend Developer",
+          "shap_value": 1316.612993014036,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Analyst",
+          "shap_value": 3377.494942040748,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": 6709.637611146236,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_DevOps Engineer",
+          "shap_value": -43.42496269129801,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Frontend Developer",
+          "shap_value": 1841.6616121589007,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Full Stack Developer",
+          "shap_value": 640.6807643009555,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_ML Engineer",
+          "shap_value": -1599.4111428652946,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": -1242.9597030015655,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Software Engineer",
+          "shap_value": 1175.532787043552,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": 780.102780484809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Boston",
+          "shap_value": -168.52885664395976,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Chicago",
+          "shap_value": 2009.3858650123746,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Los Angeles",
+          "shap_value": 545.3334341969547,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": 20146.28836281403,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_Remote",
+          "shap_value": 3500.330992015788,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Seattle",
+          "shap_value": -1785.83148893636,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": -2087.8764914915314,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        }
+      ],
+      "sample_index": 3,
+      "actual_salary": 232000.0
+    },
+    {
+      "base_value": 213340.45351821856,
+      "prediction": 200162.18978377784,
+      "top_features": [
+        {
+          "feature": "location_Chicago",
+          "shap_value": -18084.47278511137,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": 14294.036584518002,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -10732.685554090953,
+          "feature_value": -0.9018482991693466
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": 7281.821009519127,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        }
+      ],
+      "all_features": [
+        {
+          "feature": "years_experience",
+          "shap_value": 1202.7476286411893,
+          "feature_value": 0.16761838544663635
+        },
+        {
+          "feature": "skills_count",
+          "shap_value": 91.98937210466173,
+          "feature_value": -0.19482525213791047
+        },
+        {
+          "feature": "previous_salary",
+          "shap_value": -2883.715889826365,
+          "feature_value": -0.1314294493811692
+        },
+        {
+          "feature": "interview_score",
+          "shap_value": -10732.685554090953,
+          "feature_value": -0.9018482991693466
+        },
+        {
+          "feature": "education_level_Bachelor",
+          "shap_value": 5779.027930175027,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_High School",
+          "shap_value": 5841.96848302051,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "education_level_Master",
+          "shap_value": 7281.821009519127,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "education_level_PhD",
+          "shap_value": -3518.3784261228793,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Backend Developer",
+          "shap_value": 1316.612993014036,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Analyst",
+          "shap_value": 3377.494942040748,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Data Scientist",
+          "shap_value": -1184.0536960846298,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_DevOps Engineer",
+          "shap_value": -43.42496269129801,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Engineering Manager",
+          "shap_value": -5237.452824446034,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Frontend Developer",
+          "shap_value": 1841.6616121589007,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Full Stack Developer",
+          "shap_value": 640.6807643009555,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_ML Engineer",
+          "shap_value": -1599.4111428652946,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "job_role_Product Manager",
+          "shap_value": 14294.036584518002,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "job_role_Software Engineer",
+          "shap_value": 1175.532787043552,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Austin",
+          "shap_value": 780.102780484809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Boston",
+          "shap_value": -168.52885664395976,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Chicago",
+          "shap_value": -18084.47278511137,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "location_Los Angeles",
+          "shap_value": 545.3334341969547,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_New York",
+          "shap_value": -3010.364927776809,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Remote",
+          "shap_value": 3500.330992015788,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_San Francisco",
+          "shap_value": -5443.871779951452,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "location_Seattle",
+          "shap_value": -1785.83148893636,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Large (1000+)",
+          "shap_value": -5037.943584551445,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Medium (201-1000)",
+          "shap_value": -2087.8764914915314,
+          "feature_value": 0.0
+        },
+        {
+          "feature": "company_size_Small (51-200)",
+          "shap_value": -5903.481859496625,
+          "feature_value": 1.0
+        },
+        {
+          "feature": "company_size_Startup (1-50)",
+          "shap_value": 5873.8892224120455,
+          "feature_value": 0.0
+        }
+      ],
+      "sample_index": 4,
+      "actual_salary": 189000.0
+    }
+  ]
+}

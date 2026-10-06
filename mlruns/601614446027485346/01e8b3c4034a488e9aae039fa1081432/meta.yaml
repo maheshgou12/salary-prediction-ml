@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/01e8b3c4034a488e9aae039fa1081432/artifacts
+end_time: 1790849489286
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: 01e8b3c4034a488e9aae039fa1081432
+run_name: LightGBM
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1790849488445
+status: 4
+tags: []
+user_id: Welcome

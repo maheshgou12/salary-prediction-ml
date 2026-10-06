@@ -1,0 +1,223 @@
+name: FairSalary AI CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  POSTGRES_VERSION: "16"
+
+jobs:
+  # Backend Tests
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fairsalary_test
+          POSTGRES_USER: fairsalary
+          POSTGRES_PASSWORD: test_password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U fairsalary -d fairsalary_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: ./FairSalaryAI/backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: FairSalaryAI/backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio httpx
+
+      - name: Set up environment
+        run: |
+          cp ../.env.example .env
+          echo "DATABASE_URL=postgresql://fairsalary:test_password@localhost:5432/fairsalary_test" >> .env
+          echo "SECRET_KEY=test-secret-key-for-testing-only" >> .env
+          echo "DEBUG=true" >> .env
+
+      - name: Run database migrations
+        run: |
+          pip install alembic
+          alembic upgrade head
+
+      - name: Run tests
+        run: |
+          pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./FairSalaryAI/backend/coverage.xml
+          fail_ci_if_error: false
+
+  # Frontend Tests
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./FairSalaryAI/frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: FairSalaryAI/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type check
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        run: npm run test -- --run
+
+      - name: Build
+        run: npm run build
+
+  # ML Tests
+  ml-tests:
+    name: ML Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./FairSalaryAI/ml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: FairSalaryAI/backend/requirements.txt
+
+      - name: Install ML dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r ../backend/requirements.txt
+
+      - name: Run ML tests
+        run: |
+          pytest tests/ -v --cov=src --cov-report=xml
+
+  # Docker Build
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, ml-tests]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FairSalaryAI/backend
+          push: false
+          tags: fairsalary-backend:${{ github.sha }}
+          load: true
+
+      - name: Build Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FairSalaryAI/frontend
+          push: false
+          tags: fairsalary-frontend:${{ github.sha }}
+          load: true
+
+      - name: Test Backend Image
+        run: |
+          docker run --rm fairsalary-backend:${{ github.sha }} python -c "import app.main; print('Backend OK')"
+
+      - name: Test Frontend Image
+        run: |
+          docker run --rm fairsalary-frontend:${{ github.sha }} npm run build
+
+  # Deploy to Render
+  deploy-backend:
+    name: Deploy Backend to Render
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - name: Deploy to Render
+        uses: render/deploy-action@v1
+        with:
+          service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+
+  deploy-frontend:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel
+        run: |
+          cd FairSalaryAI/frontend
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --confirm
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  # Notify
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, ml-tests, docker-build, deploy-backend, deploy-frontend]
+    if: always()
+    steps:
+      - name: Send notification
+        run: |
+          STATUS="${{ needs.backend-tests.result }},${{ needs.frontend-tests.result }},${{ needs.ml-tests.result }},${{ needs.docker-build.result }}"
+          if [[ "$STATUS" == *"failure"* ]]; then
+            echo "❌ Some checks failed!"
+            exit 1
+          else
+            echo "✅ All checks passed!"
+          fi

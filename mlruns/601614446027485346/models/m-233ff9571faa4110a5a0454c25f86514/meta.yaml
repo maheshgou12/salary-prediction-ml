@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/models/m-233ff9571faa4110a5a0454c25f86514/artifacts
+creation_timestamp: 1790849451240
+experiment_id: '601614446027485346'
+last_updated_timestamp: 1790849452559
+model_id: m-233ff9571faa4110a5a0454c25f86514
+model_type: null
+name: model
+source_run_id: 69c3ec171006461ba16df2888b5a6915
+status: 3
+status_message: null

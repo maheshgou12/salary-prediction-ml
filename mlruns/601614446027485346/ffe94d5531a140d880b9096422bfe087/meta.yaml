@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/Welcome/OneDrive/Desktop/projects/Mahesh/salary-prediction-ml/mlruns/601614446027485346/ffe94d5531a140d880b9096422bfe087/artifacts
+end_time: 1791259891154
+entry_point_name: ''
+experiment_id: '601614446027485346'
+lifecycle_stage: active
+run_id: ffe94d5531a140d880b9096422bfe087
+run_name: Random Forest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791259889171
+status: 4
+tags: []
+user_id: Welcome
