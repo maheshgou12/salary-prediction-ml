@@ -25,7 +25,7 @@ const features = [
   {
     icon: Users,
     title: 'Similar Profiles',
-    description: 'Historical comparison with median salaries and percentile ranges from similar candidates.',
+    description: 'Comparison with median salaries and percentile ranges from similar candidates.',
   },
   {
     icon: Sparkles,

@@ -248,7 +248,7 @@ export function Results() {
               <div className="p-4 bg-secondary-50 rounded-xl space-y-3">
                 <h4 className="font-medium text-secondary-900 flex items-center space-x-2">
                   <Users className="w-5 h-5 text-primary-600" aria-hidden="true" />
-                  <span>Similar Historical Profiles ({similar_profiles.count})</span>
+                  <span>Similar Profiles ({similar_profiles.count})</span>
                 </h4>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div className="p-3 bg-white rounded-lg">

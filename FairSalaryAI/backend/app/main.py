@@ -8,7 +8,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
 from app.database import init_db, engine
-from app.routes import auth, prediction, fairness, model, health
+from app.routes import auth, prediction, fairness, model, health, candidates
 
 
 @asynccontextmanager
@@ -85,6 +85,7 @@ app.include_router(auth.router, prefix=settings.API_PREFIX)
 app.include_router(prediction.router, prefix=settings.API_PREFIX)
 app.include_router(fairness.router, prefix=settings.API_PREFIX)
 app.include_router(model.router, prefix=settings.API_PREFIX)
+app.include_router(candidates.router, prefix=settings.API_PREFIX)
 
 
 # Root endpoint
