@@ -12,7 +12,7 @@ def send_email(to_email: str, subject: str, body: str) -> bool:
     msg["From"] = settings.SMTP_USER
     msg["To"] = to_email
     try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT or 587) as server:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT or 587, timeout=15) as server:
             server.starttls()
             server.login(settings.SMTP_USER, settings.SMTP_PASSWORD or "")
             server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
