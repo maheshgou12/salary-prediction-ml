@@ -63,9 +63,7 @@ class Settings(BaseSettings):
 
     # Model
     MODEL_PATH: str = str(PROJECT_ROOT / "ml" / "models" / "best_model.joblib")
-    MODEL_METADATA_PATH: str = str(PROJECT_ROOT / "ml" / "models" / "metadata.json")
-    MODEL_VERSION: str = "1.0.0"
-    MODEL_METADATA_PATH: str = "ml/models/metadata.json"
+    MODEL_METADATA_PATH: str = str(PROJECT_ROOT / "ml" / "models" / "training_summary.json")
     MODEL_VERSION: str = "1.0.0"
 
     # Rate Limiting

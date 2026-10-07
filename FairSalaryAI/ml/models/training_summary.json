@@ -6,7 +6,7 @@
     "RMSE": 18503.210805768435,
     "R2": 0.9133150390279927
   },
-  "training_time": 10.406597137451172,
+  "training_time": 8.039381265640259,
   "all_results": [
     {
       "model": "Linear Regression",
@@ -15,7 +15,7 @@
       "test_mae": 14684.192913112678,
       "test_rmse": 19220.723102330077,
       "test_r2": 0.9064617998631409,
-      "training_time": 14.05322813987732,
+      "training_time": 17.302562713623047,
       "best_params": {}
     },
     {
@@ -25,7 +25,7 @@
       "test_mae": 14684.462524100842,
       "test_rmse": 19220.95072847949,
       "test_r2": 0.9064595843516554,
-      "training_time": 21.088688373565674,
+      "training_time": 23.333799600601196,
       "best_params": {
         "alpha": 0.11493777630305665
       }
@@ -35,9 +35,9 @@
       "cv_mae": 19769.3125,
       "cv_std": 349.57376474787026,
       "test_mae": 19412.303756004007,
-      "test_rmse": 25006.55892147378,
+      "test_rmse": 25006.558921473777,
       "test_r2": 0.8416721070187004,
-      "training_time": 165.2803452014923,
+      "training_time": 148.63496160507202,
       "best_params": {
         "n_estimators": 294,
         "max_depth": null,
@@ -52,7 +52,7 @@
       "test_mae": 14553.2080078125,
       "test_rmse": 18909.75113532698,
       "test_r2": 0.9094640016555786,
-      "training_time": 41.056060791015625,
+      "training_time": 27.247177600860596,
       "best_params": {
         "n_estimators": 289,
         "max_depth": 3,
@@ -67,7 +67,7 @@
       "test_mae": 14570.471797392993,
       "test_rmse": 19100.481069014542,
       "test_r2": 0.9076284617857947,
-      "training_time": 119.5060658454895,
+      "training_time": 111.77949452400208,
       "best_params": {
         "n_estimators": 218,
         "max_depth": 3,
@@ -77,12 +77,12 @@
     },
     {
       "model": "CatBoost",
-      "cv_mae": NaN,
-      "cv_std": NaN,
+      "cv_mae": 14761.067074010894,
+      "cv_std": 341.7288410350253,
       "test_mae": 14294.637809870235,
       "test_rmse": 18739.609553475144,
       "test_r2": 0.9110858992674942,
-      "training_time": 110.78612470626831,
+      "training_time": 98.0293517112732,
       "best_params": {
         "iterations": 276,
         "depth": 4,
@@ -96,7 +96,7 @@
       "test_mae": 14142.221926538363,
       "test_rmse": 18503.210805768435,
       "test_r2": 0.9133150390279927,
-      "training_time": 10.406597137451172,
+      "training_time": 8.039381265640259,
       "best_params": {}
     },
     {
@@ -106,7 +106,7 @@
       "test_mae": 14190.21818105168,
       "test_rmse": 18534.22451541029,
       "test_r2": 0.9130242056904596,
-      "training_time": 2.2174465656280518,
+      "training_time": 2.0513241291046143,
       "best_params": {}
     }
   ]

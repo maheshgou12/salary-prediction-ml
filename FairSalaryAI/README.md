@@ -169,6 +169,9 @@ pip install -r requirements.txt
 # Run database migrations (if using Alembic)
 # alembic upgrade head
 
+# Seed candidate profiles from training data (enables similar-profiles)
+python ../scripts/seed_db.py
+
 # Start server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```

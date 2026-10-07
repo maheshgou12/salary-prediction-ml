@@ -6,12 +6,13 @@ import {
   Users, Brain, ArrowLeft, Download, Share2
 } from 'lucide-react'
 import { api } from '../services/api'
-import { ChartConfig, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 interface ExplanationFeature {
   feature: string
   contribution: number
   direction: 'positive' | 'negative'
+  color?: string
 }
 
 interface SimilarProfiles {
@@ -231,7 +232,7 @@ export function Results() {
               <MetricCard
                 icon={Users}
                 label="Similar Profiles"
-                value={similar_profiles.count}
+                value={String(similar_profiles.count)}
                 color="secondary"
               />
               <MetricCard
@@ -366,7 +367,7 @@ function MetricCard({ icon: Icon, label, value, color }: { icon: any; label: str
   )
 }
 
-function ExplanationBar({ item }: { item: { feature: string; contribution: number; direction: string; color: string } }) {
+function ExplanationBar({ item }: { item: { feature: string; contribution: number; direction: string; color?: string } }) {
   const absContribution = Math.abs(item.contribution)
   const maxContribution = 200000 // Approximate max for scaling
 

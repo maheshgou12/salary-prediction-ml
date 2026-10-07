@@ -22,25 +22,25 @@ class TestDataLoading:
 
     def test_load_data_returns_dataframe(self):
         """Test that load_data returns a DataFrame."""
-        df = load_data('data/salary_data.csv')
+        df = load_data('ml/data/raw/salary_data.csv')
         assert isinstance(df, pd.DataFrame)
         assert len(df) > 0
 
     def test_data_has_required_columns(self):
         """Test that data has all required columns."""
-        df = load_data('data/salary_data.csv')
+        df = load_data('ml/data/raw/salary_data.csv')
         expected_cols = ALL_FEATURES + PROTECTED_ATTRIBUTES + [TARGET]
         for col in expected_cols:
             assert col in df.columns, f"Missing column: {col}"
 
     def test_data_has_expected_size(self):
         """Test that data has at least 2000 rows."""
-        df = load_data('data/salary_data.csv')
+        df = load_data('ml/data/raw/salary_data.csv')
         assert len(df) >= 2000
 
     def test_no_missing_target(self):
         """Test that target column has no missing values."""
-        df = load_data('data/salary_data.csv')
+        df = load_data('ml/data/raw/salary_data.csv')
         assert df[TARGET].isnull().sum() == 0
 
 
@@ -78,7 +78,7 @@ class TestPreprocessing:
         preprocessor = create_preprocessing_pipeline()
 
         # Fit on training data
-        train_data = load_data('data/salary_data.csv')[ALL_FEATURES]
+        train_data = load_data('ml/data/raw/salary_data.csv')[ALL_FEATURES]
         preprocessor.fit(train_data)
 
         # Transform with unknown category
@@ -171,7 +171,7 @@ class TestPrediction:
     def model(self):
         """Load trained model."""
         import joblib
-        return joblib.load('models/best_model.joblib')
+        return joblib.load('ml/models/best_model.joblib')
 
     def test_model_predicts_single_sample(self, model):
         """Test that model can predict on a single sample."""

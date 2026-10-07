@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Shield, CheckCircle, AlertTriangle, XCircle, BarChart2, Users, TrendingUp, Download, RefreshCw } from 'lucide-react'
 import { api } from '../services/api'
 import {
-  ChartConfig, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie
 } from 'recharts'
 
 interface FairnessDashboard {
@@ -235,7 +235,8 @@ function OverviewTab({ dashboard }: { dashboard: FairnessDashboard }) {
               </div>
             </div>
           )
-        )}
+        })}
+      </div>
 
       {/* Group Comparison Chart */}
       <div className="card p-6">
@@ -331,7 +332,7 @@ function AttributeTab({ attribute }: { attribute: any }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary-100">
-              {attribute.groups.map((group) => (
+              {attribute.groups.map((group: any) => (
                 <tr key={group.group} className="hover:bg-secondary-50">
                   <td className="px-6 py-4 font-medium text-secondary-900">{group.group}</td>
                   <td className="px-6 py-4 text-right text-secondary-600">{group.count.toLocaleString()}</td>
@@ -372,7 +373,7 @@ function AttributeTab({ attribute }: { attribute: any }) {
               <span>Recommendations</span>
             </h3>
             <ul className="list-disc list-inside space-y-2 text-warning-700">
-              {attribute.recommendations.map((rec, i) => (
+              {attribute.recommendations.map((rec: any, i: number) => (
                 <li key={i}>{rec}</li>
               ))}
             </ul>
@@ -467,3 +468,4 @@ function MetricCard({ label, value, color }: { label: string; value: string; col
 function getStatusConfig(status: string) {
   return STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS.UNKNOWN
 }
+

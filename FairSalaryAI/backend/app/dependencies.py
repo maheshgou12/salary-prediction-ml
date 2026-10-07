@@ -38,7 +38,7 @@ def get_current_user(
             )
 
         # Get user from database
-        user = db.query(User).filter(User.id == token_payload.sub).first()
+        user = db.query(User).filter(User.id == int(token_payload.sub)).first()
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -93,7 +93,7 @@ def get_optional_user(
         if token_payload.type != "access":
             return None
 
-        user = db.query(User).filter(User.id == token_payload.sub).first()
+        user = db.query(User).filter(User.id == int(token_payload.sub)).first()
         if user and user.is_active:
             return user
     except ValueError:

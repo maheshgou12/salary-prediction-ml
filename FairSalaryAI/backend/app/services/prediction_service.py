@@ -67,28 +67,43 @@ class PredictionService:
 
     def _prepare_input(self, candidate_data: Dict[str, Any]) -> pd.DataFrame:
         """Prepare input data for the model."""
-        # Convert to DataFrame with correct column order
-        # The model's preprocessor expects specific columns
-        df = pd.DataFrame([candidate_data])
+        # Map API candidate fields to the model's expected features
+        education_map = {
+            "High School": "High School",
+            "Associate Degree": "Bachelor",
+            "Bachelor's Degree": "Bachelor",
+            "Master's Degree": "Master",
+            "PhD": "PhD",
+        }
+        education = candidate_data.get("education", "")
+        skills = candidate_data.get("skills") or []
+        skills_count = len(skills) if isinstance(skills, list) else 1
 
-        # Ensure all required columns are present
-        required_columns = [
-            "experience_years", "education", "job_role", "location",
-            "skills", "industry", "company_size", "employment_type"
+        experience = float(candidate_data.get("experience_years", 0) or 0)
+        previous_salary = candidate_data.get("previous_salary")
+        if previous_salary is None:
+            previous_salary = max(30000.0, 40000.0 + experience * 12000.0)
+        interview_score = candidate_data.get("interview_score")
+        if interview_score is None:
+            interview_score = 7.0
+
+        features = {
+            "years_experience": experience,
+            "skills_count": float(skills_count),
+            "previous_salary": float(previous_salary),
+            "interview_score": float(interview_score),
+            "education_level": education_map.get(education, education),
+            "job_role": candidate_data.get("job_role", ""),
+            "location": candidate_data.get("location", ""),
+            "company_size": candidate_data.get("company_size", ""),
+        }
+        return pd.DataFrame([features])[
+            [
+                "years_experience", "skills_count", "previous_salary",
+                "interview_score", "education_level", "job_role",
+                "location", "company_size",
+            ]
         ]
-
-        for col in required_columns:
-            if col not in df.columns:
-                df[col] = ""
-
-        # Handle skills - convert list to count or keep as-is depending on model
-        if "skills" in df.columns:
-            if isinstance(df["skills"].iloc[0], list):
-                df["skills_count"] = df["skills"].apply(len)
-            else:
-                df["skills_count"] = 1
-
-        return df
 
     def _calculate_interval(
         self, predicted_salary: float
@@ -238,11 +253,22 @@ class PredictionService:
         """Get model information."""
         return {
             "version": self.model_metadata.get("version", settings.MODEL_VERSION),
-            "model_type": self.model_metadata.get("model_type", "Unknown"),
-            "metrics": self.model_metadata.get("metrics", {}),
+            "model_type": self.model_metadata.get("model_type", self.model_metadata.get("best_model", "Unknown")),
+            "metrics": self._normalize_metrics(self.model_metadata),
             "fairness_metrics": self.model_metadata.get("fairness_metrics", {}),
             "features": self.model_metadata.get("features", [])
         }
+
+    def _normalize_metrics(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize metrics from training summary to the API schema."""
+        raw = metadata.get("metrics") or metadata.get("test_metrics") or {}
+        norm = {}
+        for src, dst in [("MAE", "mae"), ("RMSE", "rmse"), ("R2", "r2"),
+                         ("mae", "mae"), ("rmse", "rmse"), ("r2", "r2"),
+                         ("cv_mae", "cv_mae"), ("cv_std", "cv_std")]:
+            if src in raw and dst not in norm:
+                norm[dst] = float(raw[src])
+        return norm
 
 
 # Global instance

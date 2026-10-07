@@ -15,8 +15,8 @@ const JOB_ROLES = [
 ]
 
 const LOCATIONS = [
-  'Bangalore', 'Mumbai', 'Delhi NCR', 'Hyderabad', 'Pune', 'Chennai',
-  'Kolkata', 'Ahmedabad', 'Remote', 'Other'
+  'Austin', 'Remote', 'San Francisco', 'New York', 'Los Angeles',
+  'Seattle', 'Chicago', 'Boston'
 ]
 
 const INDUSTRIES = [
@@ -38,11 +38,13 @@ export function Predict() {
     experience_years: 3,
     education: "Bachelor's Degree",
     job_role: 'Software Engineer',
-    location: 'Bangalore',
+    location: 'San Francisco',
     skills: ['Python', 'SQL'],
     industry: 'Technology',
     company_size: 'Medium (201-1000)',
     employment_type: 'Full-time',
+    previous_salary: 100000,
+    interview_score: 7,
   })
   const [skillsInput, setSkillsInput] = useState('Python, SQL')
   const [loading, setLoading] = useState(false)
@@ -140,6 +142,33 @@ export function Predict() {
               />
             </div>
             <div>
+              <label htmlFor="previous_salary" className="label">Previous Salary (USD)</label>
+              <input
+                id="previous_salary"
+                name="previous_salary"
+                type="number"
+                min="0"
+                step="1000"
+                value={formData.previous_salary}
+                onChange={handleChange}
+                className="input mt-1.5"
+              />
+            </div>
+            <div>
+              <label htmlFor="interview_score" className="label">Interview Score (0-10)</label>
+              <input
+                id="interview_score"
+                name="interview_score"
+                type="number"
+                min="0"
+                max="10"
+                step="0.5"
+                value={formData.interview_score}
+                onChange={handleChange}
+                className="input mt-1.5"
+              />
+            </div>
+            <div>
               <label htmlFor="education" className="label">Education Level</label>
               <select
                 id="education"
@@ -191,7 +220,7 @@ export function Predict() {
         <fieldset className="card p-6">
           <legend className="text-lg font-semibold text-secondary-900 mb-4 flex items-center space-x-2">
             <Info className="w-5 h-5 text-primary-600" aria-hidden="true" />
-            <span>Technical Skills</legend>
+            <span>Technical Skills</span></legend>
           <div>
             <label htmlFor="skills" className="label">Skills (comma-separated)</label>
             <input
@@ -212,7 +241,7 @@ export function Predict() {
         <fieldset className="card p-6">
           <legend className="text-lg font-semibold text-secondary-900 mb-4 flex items-center space-x-2">
             <Info className="w-5 h-5 text-primary-600" aria-hidden="true" />
-            <span>Company & Industry</legend>
+            <span>Company & Industry</span></legend>
           <div className="grid md:grid-cols-3 gap-6">
             <div>
               <label htmlFor="industry" className="label">Industry</label>

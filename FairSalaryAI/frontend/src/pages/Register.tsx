@@ -238,9 +238,9 @@ export function Register() {
               />
               <label htmlFor="terms" className="text-sm text-secondary-600">
                 I agree to the{' '}
-                <Link href="#" className="text-primary-600 hover:text-primary-700">Terms of Service</Link>{' '}
+                <a href="#" className="text-primary-600 hover:text-primary-700">Terms of Service</a>{' '}
                 and{' '}
-                <Link href="#" className="text-primary-600 hover:text-primary-700">Privacy Policy</Link>
+                <a href="#" className="text-primary-600 hover:text-primary-700">Privacy Policy</a>
               </label>
             </div>
 

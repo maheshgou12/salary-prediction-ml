@@ -55,7 +55,7 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: int  # user_id
+    sub: str  # user_id (JWT spec requires string)
     email: str
     role: str
     exp: int
@@ -80,6 +80,8 @@ class CandidateInput(BaseModel):
     industry: str = Field(..., min_length=1, max_length=100, description="Industry sector")
     company_size: str = Field(..., description="Company size category")
     employment_type: str = Field(default="Full-time", description="Employment type")
+    previous_salary: Optional[float] = Field(default=None, ge=0, description="Existing/expected prior salary (USD)")
+    interview_score: Optional[float] = Field(default=None, ge=0, le=10, description="Interview performance score (0-10)")
 
     # Valid values (documentation)
     EDUCATION_OPTIONS: ClassVar[List[str]] = [
@@ -145,8 +147,8 @@ class PredictionHistoryItem(BaseModel):
 
 
 class PredictionDetail(PredictionHistoryItem):
-    similar_profiles: Optional[Dict[str, Any]] = None
-    explanation: Optional[Dict[str, Any]] = None
+    similar_profiles: Optional[Any] = None
+    explanation: Optional[Any] = None
 
 
 # ==========================================
@@ -180,11 +182,11 @@ class FairnessReport(BaseModel):
 
 
 class FairnessDashboard(BaseModel):
-    gender: Optional[FairnessReport] = None
-    age: Optional[FairnessReport] = None
     overall_status: str
     model_version: str
-    generated_at: datetime
+    protected_attributes: List[Dict[str, Any]] = []
+    recommendations: List[str] = []
+    generated_at: Optional[datetime] = None
 
 
 # ==========================================

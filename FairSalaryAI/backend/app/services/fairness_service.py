@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from app.config import settings
+from app.config import settings, PROJECT_ROOT
 
 warnings.filterwarnings("ignore")
 
@@ -22,7 +22,7 @@ class FairnessService:
         import os
         import json
 
-        fairness_path = "ml/models/fairness_audit.json"
+        fairness_path = str(PROJECT_ROOT / "ml" / "models" / "fairness_audit.json")
         if os.path.exists(fairness_path):
             with open(fairness_path, "r") as f:
                 self.fairness_data = json.load(f)
@@ -32,11 +32,13 @@ class FairnessService:
         if not self.fairness_data:
             return self._empty_dashboard()
 
+        from datetime import datetime
         dashboard = {
             "overall_status": "PASS",
             "model_version": "1.0.0",
             "protected_attributes": [],
-            "recommendations": []
+            "recommendations": [],
+            "generated_at": datetime.utcnow().isoformat()
         }
 
         for attr in ["gender", "age"]:
@@ -52,8 +54,8 @@ class FairnessService:
 
     def _analyze_attribute(self, attribute: str) -> Dict[str, Any]:
         """Analyze fairness for a single protected attribute."""
-        fl_key = f"{attr}_fairlearn"
-        group_key = f"{attr}_group_metrics"
+        fl_key = f"{attribute}_fairlearn"
+        group_key = f"{attribute}_group_metrics"
 
         fl_data = self.fairness_data.get(fl_key, {})
         group_data = self.fairness_data.get(group_key, [])
@@ -134,7 +136,8 @@ class FairnessService:
             "protected_attributes": [],
             "recommendations": [
                 "Run fairness analysis to generate dashboard"
-            ]
+            ],
+            "generated_at": None
         }
 
 

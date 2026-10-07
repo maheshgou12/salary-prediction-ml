@@ -77,10 +77,10 @@ async def login(
 
     # Create tokens
     access_token = create_access_token(
-        data={"sub": user.id, "email": user.email, "role": user.role}
+        data={"sub": str(user.id), "email": user.email, "role": user.role}
     )
     refresh_token = create_refresh_token(
-        data={"sub": user.id, "email": user.email, "role": user.role}
+        data={"sub": str(user.id), "email": user.email, "role": user.role}
     )
 
     # Update last login
@@ -112,7 +112,7 @@ async def refresh_token(
             )
 
         # Check user still exists and is active
-        user = db.query(User).filter(User.id == payload.sub).first()
+        user = db.query(User).filter(User.id == int(payload.sub)).first()
         if not user or not user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -121,10 +121,10 @@ async def refresh_token(
 
         # Create new tokens
         access_token = create_access_token(
-            data={"sub": user.id, "email": user.email, "role": user.role}
+            data={"sub": str(user.id), "email": user.email, "role": user.role}
         )
         new_refresh_token = create_refresh_token(
-            data={"sub": user.id, "email": user.email, "role": user.role}
+            data={"sub": str(user.id), "email": user.email, "role": user.role}
         )
 
         return Token(

@@ -16,6 +16,9 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON
+
+JSONBCompat = JSON().with_variant(JSONB(), "postgresql")
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -93,7 +96,7 @@ class Prediction(Base):
     )
 
     # Input features (stored as JSONB for flexibility)
-    input_data: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    input_data: Mapped[dict] = mapped_column(JSONBCompat, nullable=False)
 
     # Prediction results
     predicted_salary: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -102,8 +105,8 @@ class Prediction(Base):
     confidence: Mapped[float] = mapped_column(nullable=False)
 
     # Supporting information
-    similar_profiles: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
-    explanation: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    similar_profiles: Mapped[Optional[dict]] = mapped_column(JSONBCompat, nullable=True)
+    explanation: Mapped[Optional[dict]] = mapped_column(JSONBCompat, nullable=True)
 
     # Model info
     model_version: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -123,6 +126,14 @@ class Prediction(Base):
     def __repr__(self) -> str:
         return f"<Prediction(id={self.id}, user_id={self.user_id}, salary={self.predicted_salary})>"
 
+    @property
+    def minimum_salary(self) -> int:
+        return self.min_salary
+
+    @property
+    def maximum_salary(self) -> int:
+        return self.max_salary
+
 
 class CandidateProfile(Base):
     __tablename__ = "candidate_profiles"
@@ -136,7 +147,7 @@ class CandidateProfile(Base):
     )
     job_role: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     location: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    skills: Mapped[List[str]] = mapped_column(JSONB, nullable=False)
+    skills: Mapped[List[str]] = mapped_column(JSONBCompat, nullable=False)
     industry: Mapped[str] = mapped_column(String(100), nullable=False)
     company_size: Mapped[CompanySize] = mapped_column(
         Enum(CompanySize), nullable=False
@@ -177,10 +188,10 @@ class ModelVersion(Base):
     model_type: Mapped[str] = mapped_column(String(100), nullable=False)
 
     # Performance metrics
-    metrics: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    metrics: Mapped[dict] = mapped_column(JSONBCompat, nullable=False)
 
     # Fairness metrics
-    fairness_metrics: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    fairness_metrics: Mapped[Optional[dict]] = mapped_column(JSONBCompat, nullable=True)
 
     # Model artifacts path
     model_path: Mapped[str] = mapped_column(String(500), nullable=False)

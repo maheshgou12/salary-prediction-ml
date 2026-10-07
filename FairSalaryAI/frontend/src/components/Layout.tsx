@@ -133,8 +133,8 @@ export function Layout() {
               </button>
             </div>
           </nav>
-        </div>)}
-      </header>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -155,18 +155,18 @@ export function Layout() {
               >
                 About
               </Link>
-              <Link
+              <a
                 href="#"
                 className="text-sm text-secondary-500 hover:text-secondary-700"
               >
                 Privacy
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#"
                 className="text-sm text-secondary-500 hover:text-secondary-700"
               >
                 Terms
-              </Link>
+              </a>
             </div>
           </div>
           <p className="mt-4 text-xs text-secondary-400 text-center">

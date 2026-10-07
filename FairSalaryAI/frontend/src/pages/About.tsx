@@ -135,7 +135,7 @@ export function About() {
               <h3 className="text-xl font-semibold text-secondary-900 mb-2">{feature.title}</h3>
               <p className="text-secondary-600 leading-relaxed">{feature.description}</p>
             </article>
-          )}
+          ))}
         </div>
       </section>
 
