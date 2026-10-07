@@ -8,8 +8,8 @@ End-to-end ML platform that predicts fair salaries and audits for bias across pr
 
 ## Live Demo
 
-- Frontend: _add your Vercel link here after deploy_
-- API docs: _add your Render link here after deploy_ (`/docs`)
+- Frontend: https://frontend-six-zeta-70.vercel.app
+- API docs: https://fairsalary-backend.onrender.com/docs
 
 Demo login: `demo@test.com` / `Password123`
 
