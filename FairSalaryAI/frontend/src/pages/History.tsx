@@ -91,12 +91,13 @@ export function History() {
   const roleAverages = Object.values(
     filtered.reduce((acc: any, p) => {
       const role = p.input_data?.job_role || 'N/A'
-      acc[role] = acc[role] || { role, total: 0, count: 0 }
+      acc[role] = acc[role] || { role, total: 0, count: 0, max: 0 }
       acc[role].total += p.predicted_salary
       acc[role].count += 1
+      acc[role].max = Math.max(acc[role].max, p.predicted_salary)
       return acc
     }, {})
-  ).map((r: any) => ({ role: r.role, avg: Math.round(r.total / r.count) }))
+  ).map((r: any) => ({ role: r.role, avg: Math.round(r.total / r.count), max: r.max }))
 
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -168,9 +169,9 @@ export function History() {
             </ResponsiveContainer>
           </div>
           <div className="card p-4">
-            <h3 className="font-semibold text-secondary-900 mb-3">Average Salary by Role</h3>
+            <h3 className="font-semibold text-secondary-900 mb-3">Role Comparison (Avg vs Max)</h3>
             <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={roleAverages}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="role" /><YAxis /><Tooltip /><Bar dataKey="avg" fill="#4f46e5" /></BarChart>
+              <BarChart data={roleAverages}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="role" /><YAxis /><Tooltip /><Bar dataKey="avg" fill="#4f46e5" name="Average" /><Bar dataKey="max" fill="#10b981" name="Max" /></BarChart>
             </ResponsiveContainer>
           </div>
         </div>

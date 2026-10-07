@@ -65,3 +65,12 @@
     @apply px-4 sm:px-6 lg:px-8;
   }
 }
+/* dark mode */
+  .dark body { background-color: #0f172a; color: #e2e8f0; }
+  .dark .bg-white { background-color: #1e293b !important; }
+  .dark .bg-secondary-50 { background-color: #0f172a !important; }
+  .dark .bg-secondary-100 { background-color: #334155 !important; }
+  .dark .text-secondary-900 { color: #f1f5f9 !important; }
+  .dark .text-secondary-600, .dark .text-secondary-700, .dark .text-secondary-500, .dark .text-secondary-400 { color: #cbd5e1 !important; }
+  .dark .border-secondary-200 { border-color: #334155 !important; }
+  .dark table thead { background-color: #1e293b !important; }

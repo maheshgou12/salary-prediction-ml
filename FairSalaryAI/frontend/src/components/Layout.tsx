@@ -18,6 +18,13 @@ export function Layout() {
   const { user, logout } = useAuth()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
+  const toggleDark = () => {
+    document.documentElement.classList.toggle('dark')
+    const on = document.documentElement.classList.contains('dark')
+    setDark(on)
+    localStorage.setItem('theme', on ? 'dark' : 'light')
+  }
 
   const navItems = [
     { path: '/predict', label: 'Predict', icon: Calculator },
@@ -81,6 +88,9 @@ export function Layout() {
                 >
                   {user?.full_name}
                 </Link>
+                <button onClick={toggleDark} aria-label="Toggle dark mode" className="p-2 rounded-lg hover:bg-secondary-100 text-secondary-600 text-lg">
+                  {dark ? '☀️' : '🌙'}
+                </button>
                 <button
                   onClick={() => logout()}
                   className="text-sm font-medium text-secondary-600 hover:text-secondary-900 transition-colors"
