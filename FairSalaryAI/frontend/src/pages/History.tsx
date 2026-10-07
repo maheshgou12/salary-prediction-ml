@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calculator, DollarSign, Clock, ArrowRight, Download, Filter, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import { Calculator, DollarSign, Clock, ArrowRight, Download, Filter, ChevronLeft, ChevronRight, MoreHorizontal, TrendingUp } from 'lucide-react'
 import { api } from '../services/api'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 
 interface Prediction {
   id: number
@@ -47,6 +48,55 @@ export function History() {
       setLoading(false)
     }
   }
+
+  const filtered = predictions.filter((p) => {
+    if (filters.date_from && new Date(p.created_at) < new Date(filters.date_from)) return false
+    if (filters.date_to && new Date(p.created_at) > new Date(filters.date_to)) return false
+    if (filters.min_salary && p.predicted_salary < Number(filters.min_salary)) return false
+    if (filters.max_salary && p.predicted_salary > Number(filters.max_salary)) return false
+    return true
+  })
+
+  const exportCsv = () => {
+    const header = 'Date,Role,Location,Experience,Predicted,Min,Max,Confidence\n'
+    const rows = filtered
+      .map((p) =>
+        [
+          new Date(p.created_at).toISOString(),
+          p.input_data?.job_role ?? '',
+          p.input_data?.location ?? '',
+          p.input_data?.experience_years ?? 0,
+          p.predicted_salary,
+          p.minimum_salary,
+          p.maximum_salary,
+          Math.round(p.confidence * 100) + '%',
+        ].join(',')
+      )
+      .join('\n')
+    const blob = new Blob([header + rows], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'prediction_history.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const avgSalary = filtered.length ? Math.round(filtered.reduce((s, p) => s + p.predicted_salary, 0) / filtered.length) : 0
+  const maxSalary = filtered.length ? Math.max(...filtered.map((p) => p.predicted_salary)) : 0
+  const chartData = [...filtered].reverse().map((p) => ({
+    date: new Date(p.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }),
+    salary: p.predicted_salary,
+  }))
+  const roleAverages = Object.values(
+    filtered.reduce((acc: any, p) => {
+      const role = p.input_data?.job_role || 'N/A'
+      acc[role] = acc[role] || { role, total: 0, count: 0 }
+      acc[role].total += p.predicted_salary
+      acc[role].count += 1
+      return acc
+    }, {})
+  ).map((r: any) => ({ role: r.role, avg: Math.round(r.total / r.count) }))
 
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -100,6 +150,32 @@ export function History() {
         </Link>
       </div>
 
+      {/* Insights */}
+      {predictions.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="card p-4"><p className="text-sm text-secondary-500">Total Predictions</p><p className="text-2xl font-bold text-secondary-900">{filtered.length}</p></div>
+          <div className="card p-4"><p className="text-sm text-secondary-500">Average Predicted Salary</p><p className="text-2xl font-bold text-secondary-900">₹{avgSalary.toLocaleString('en-IN')}</p></div>
+          <div className="card p-4"><p className="text-sm text-secondary-500">Highest Prediction</p><p className="text-2xl font-bold text-secondary-900">₹{maxSalary.toLocaleString('en-IN')}</p></div>
+        </div>
+      )}
+
+      {predictions.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="card p-4">
+            <h3 className="font-semibold text-secondary-900 mb-3 flex items-center"><TrendingUp className="w-4 h-4 mr-2" />Salary Trend</h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" /><YAxis /><Tooltip /><Line type="monotone" dataKey="salary" stroke="#4f46e5" strokeWidth={2} /></LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card p-4">
+            <h3 className="font-semibold text-secondary-900 mb-3">Average Salary by Role</h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={roleAverages}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="role" /><YAxis /><Tooltip /><Bar dataKey="avg" fill="#4f46e5" /></BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
       {/* Filters */}
       <div className="card p-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -145,6 +221,9 @@ export function History() {
             <button className="btn-secondary" onClick={() => setFilters({ date_from: '', date_to: '', min_salary: '', max_salary: '' })}>
               Clear Filters
             </button>
+            <button className="btn-secondary" onClick={exportCsv}>
+              <Download className="w-4 h-4 mr-1" aria-hidden="true" /> Export CSV
+            </button>
           </div>
         </div>
       </div>
@@ -184,7 +263,7 @@ export function History() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-secondary-100">
-                  {predictions.map((prediction) => (
+                  {filtered.map((prediction) => (
                     <tr key={prediction.id} className="hover:bg-secondary-50 transition-colors">
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-secondary-900">
                         {formatDate(prediction.created_at)}

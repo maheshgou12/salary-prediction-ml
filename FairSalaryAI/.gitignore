@@ -120,3 +120,4 @@ ml/*.pyc
 !ml/data/raw/salary_data.csv
 !ml/models/*.json
 !backend/fairsalary.db
+.vercel

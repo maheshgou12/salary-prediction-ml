@@ -1,16 +1,3 @@
-# FairSalary AI — Salary Prediction & Pay Equity Platform
-
-End-to-end ML platform that predicts fair salaries and audits for bias across protected groups (gender, age).
-
-- **Backend**: FastAPI + JWT auth + SQLite (`backend/`)
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind (`frontend/`)
-- **ML**: Stacking Ensemble (R² 0.913, MAE $14k), conformal intervals, SHAP, fairness auditing (`ml/`)
-
-## Live Demo
-
-- Frontend: https://frontend-six-zeta-70.vercel.app
-- API docs: https://fairsalary-backend.onrender.com/docs
-
 Demo login: `demo@test.com` / `Password123`
 
 ## Quick Start
