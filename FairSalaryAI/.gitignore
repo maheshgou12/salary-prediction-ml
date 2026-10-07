@@ -115,3 +115,8 @@ ml/models/*.joblib
 ml/models/*.pkl
 ml/__pycache__/
 ml/*.pyc
+# Required for deployment (overrides above)
+!ml/models/best_model.joblib
+!ml/data/raw/salary_data.csv
+!ml/models/*.json
+!backend/fairsalary.db
