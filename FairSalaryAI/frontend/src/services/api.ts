@@ -91,6 +91,16 @@ export const api = {
     return response.data
   },
 
+  forgotPassword: async (email: string) => {
+    const response = await client.post('/auth/forgot-password', { email })
+    return response.data
+  },
+
+  resetPassword: async (token: string, newPassword: string) => {
+    const response = await client.post('/auth/reset-password', { token, new_password: newPassword })
+    return response.data
+  },
+
   // Predictions
   predict: async (data: any) => {
     const response = await client.post('/predict', data)

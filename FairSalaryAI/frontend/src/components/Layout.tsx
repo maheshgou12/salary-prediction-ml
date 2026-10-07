@@ -23,6 +23,7 @@ export function Layout() {
     { path: '/predict', label: 'Predict', icon: Calculator },
     { path: '/history', label: 'History', icon: History },
     { path: '/fairness', label: 'Fairness', icon: BarChart2 },
+    { path: '/profile', label: 'Profile', icon: User },
   ]
 
   return (
@@ -74,7 +75,12 @@ export function Layout() {
                 History
               </Link>
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-secondary-600">{user?.full_name}</span>
+                <Link
+                  to="/profile"
+                  className="text-sm text-secondary-600 hover:text-secondary-900 transition-colors"
+                >
+                  {user?.full_name}
+                </Link>
                 <button
                   onClick={() => logout()}
                   className="text-sm font-medium text-secondary-600 hover:text-secondary-900 transition-colors"

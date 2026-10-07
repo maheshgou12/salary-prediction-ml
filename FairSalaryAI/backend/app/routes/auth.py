@@ -15,8 +15,21 @@ from app.security.auth import (
     create_access_token, create_refresh_token, decode_token, verify_token_type
 )
 from app.dependencies import get_current_user, get_optional_user
+from app.config import settings
+from app.services.email_service import send_email
+from datetime import datetime
+from pydantic import BaseModel, EmailStr
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -138,6 +151,48 @@ async def refresh_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(e)
         )
+
+
+@router.post("/forgot-password")
+async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """Email a password reset link to the user."""
+    user = db.query(User).filter(User.email == request.email).first()
+    if user:
+        from jose import jwt as _jwt
+        expire = datetime.utcnow() + timedelta(minutes=15)
+        token = _jwt.encode(
+            {"sub": str(user.id), "email": user.email, "type": "reset", "exp": expire},
+            settings.SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM,
+        )
+        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+        send_email(
+            user.email,
+            "FairSalary AI - Password Reset",
+            f"Hi {user.full_name},\n\nClick the link below to reset your password (valid 15 minutes):\n{reset_link}\n\nIf you did not request this, ignore this email.",
+        )
+    return {"message": "If that email is registered, a reset link has been sent."}
+
+
+@router.post("/reset-password")
+async def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+    """Reset password using the emailed token."""
+    try:
+        from jose import jwt as _jwt
+        raw = _jwt.decode(request.token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        if raw.get("type") != "reset":
+            raise HTTPException(status_code=400, detail="Invalid token")
+        user_id = int(raw["sub"])
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.hashed_password = hash_password(request.new_password)
+    db.commit()
+    return {"message": "Password updated successfully"}
 
 
 @router.get("/me", response_model=UserResponse)

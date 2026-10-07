@@ -7,6 +7,9 @@ import { Register } from './pages/Register'
 import { Predict } from './pages/Predict'
 import { Results } from './pages/Results'
 import { History } from './pages/History'
+import { ForgotPassword } from './pages/ForgotPassword'
+import { ResetPassword } from './pages/ResetPassword'
+import { Profile } from './pages/Profile'
 import { Fairness } from './pages/Fairness'
 import { About } from './pages/About'
 
@@ -66,6 +69,16 @@ function AppRoutes() {
             <PublicRoute>
               <Register />
             </PublicRoute>
+          }
+        />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
           }
         />
         <Route
