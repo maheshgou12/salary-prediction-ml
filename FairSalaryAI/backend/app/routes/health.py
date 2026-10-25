@@ -62,9 +62,28 @@ async def test_smtp_connection():
             s.close()
         except Exception as e:
             results[f"port_{port}"] = f"FAILED: {type(e).__name__}: {e}"
-    from app.services.email_service import send_email
-    email_res = send_email("maheshburra2712@gmail.com", "Diagnostics Test", "Testing from Render")
-    results["send_email_result"] = email_res
+    if settings.RESEND_API_KEY:
+        import requests
+        try:
+            r = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {settings.RESEND_API_KEY.strip()}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "from": "FairSalary AI <onboarding@resend.dev>",
+                    "to": ["maheshburra2712@gmail.com"],
+                    "subject": "FairSalary AI - Password Reset Test",
+                    "text": "Testing Resend email delivery from Render",
+                },
+                timeout=5,
+            )
+            results["resend_api_status"] = r.status_code
+            results["resend_api_body"] = r.json() if "application/json" in r.headers.get("content-type", "") else r.text
+        except Exception as e:
+            results["resend_api_error"] = str(e)
+
     results["resend_key_configured"] = bool(settings.RESEND_API_KEY)
     results["brevo_key_configured"] = bool(settings.BREVO_API_KEY)
     results["smtp_user_configured"] = bool(settings.SMTP_USER)
