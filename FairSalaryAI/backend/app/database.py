@@ -14,15 +14,21 @@ class Base(DeclarativeBase):
     pass
 
 
-# Create engine with connection pooling
-engine = create_engine(
-    settings.DATABASE_URL,
-    pool_size=settings.DATABASE_POOL_SIZE,
-    max_overflow=settings.DATABASE_MAX_OVERFLOW,
-    pool_pre_ping=True,
-    pool_recycle=3600,
-    echo=settings.DEBUG,
-)
+# Create engine with dialect-specific options
+db_url = settings.resolved_database_url
+is_sqlite = db_url.startswith("sqlite")
+engine_kwargs = {"echo": settings.DEBUG}
+if is_sqlite:
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    engine_kwargs.update({
+        "pool_size": settings.DATABASE_POOL_SIZE,
+        "max_overflow": settings.DATABASE_MAX_OVERFLOW,
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+    })
+
+engine = create_engine(db_url, **engine_kwargs)
 
 # Session factory
 SessionLocal = sessionmaker(
@@ -70,7 +76,7 @@ def drop_db() -> None:
 # SQLite-specific optimizations (for local dev)
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
-    if "sqlite" in settings.DATABASE_URL:
+    if "sqlite" in db_url:
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("PRAGMA journal_mode=WAL")

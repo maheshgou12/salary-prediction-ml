@@ -357,13 +357,13 @@ def run_training(
             try:
                 mlflow.set_experiment('fairsalary-salary-prediction')
                 with mlflow.start_run(run_name=name):
-                    mlflow.log_params(best_params)
+                    mlflow.log_params(result['best_params'])
                     mlflow.log_metrics({
                         'cv_mae': result['cv_mae'],
                         'cv_std': result['cv_std'],
-                        'test_mae': metrics['MAE'],
-                        'test_rmse': metrics['RMSE'],
-                        'test_r2': metrics['R2'],
+                        'test_mae': result['test_metrics']['MAE'],
+                        'test_rmse': result['test_metrics']['RMSE'],
+                        'test_r2': result['test_metrics']['R2'],
                         'training_time_seconds': training_time,
                     })
                     mlflow.sklearn.log_model(

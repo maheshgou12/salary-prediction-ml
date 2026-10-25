@@ -26,24 +26,24 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50 via-white to-secondary-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50 via-white to-secondary-50 dark:from-secondary-950 dark:via-secondary-900 dark:to-secondary-950 px-4 py-12 transition-colors">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center shadow-md">
               <Calculator className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-secondary-900">FairSalary AI</span>
+            <span className="text-2xl font-bold text-secondary-900 dark:text-white">FairSalary AI</span>
           </Link>
-          <h1 className="text-3xl font-bold text-secondary-900">Welcome back</h1>
-          <p className="text-secondary-600 mt-2">Sign in to your account to continue</p>
+          <h1 className="text-3xl font-bold text-secondary-900 dark:text-white">Welcome back</h1>
+          <p className="text-secondary-600 dark:text-secondary-400 mt-2">Sign in to your account to continue</p>
         </div>
 
         {/* Login Form */}
-        <div className="card p-8">
+        <div className="card p-8 bg-white dark:bg-secondary-900/90 dark:border dark:border-secondary-800 shadow-xl backdrop-blur-sm">
           {error && (
-            <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 border border-danger-200 rounded-lg text-danger-700" role="alert">
+            <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 dark:bg-danger-950/40 border border-danger-200 dark:border-danger-800 rounded-lg text-danger-700 dark:text-danger-300" role="alert">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               <span className="text-sm">{error}</span>
             </div>
@@ -51,7 +51,7 @@ export function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div>
-              <label htmlFor="email" className="label">
+              <label htmlFor="email" className="label text-secondary-700 dark:text-secondary-200">
                 Email address
               </label>
               <div className="relative mt-1.5">
@@ -64,7 +64,7 @@ export function Login() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="input pl-10"
+                  className="input pl-10 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500"
                   placeholder="you@example.com"
                   disabled={loading}
                 />
@@ -73,7 +73,7 @@ export function Login() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="label">
+                <label htmlFor="password" className="label text-secondary-700 dark:text-secondary-200">
                   Password
                 </label>
               </div>
@@ -87,14 +87,14 @@ export function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input pl-10 pr-12"
+                  className="input pl-10 pr-12 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500"
                   placeholder="••••••••"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -103,14 +103,14 @@ export function Login() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2">
+              <label className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded border-secondary-300 text-primary-600 focus:ring-primary-500"
+                  className="w-4 h-4 rounded border-secondary-300 dark:border-secondary-600 text-primary-600 focus:ring-primary-500 dark:bg-secondary-800"
                 />
-                <span className="text-sm text-secondary-600">Remember me</span>
+                <span className="text-sm text-secondary-600 dark:text-secondary-400">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-sm text-primary-600 hover:text-primary-700">
+              <Link to="/forgot-password" className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                 Forgot password?
               </Link>
             </div>
@@ -118,7 +118,7 @@ export function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 text-lg"
+              className="w-full btn-primary py-3 text-lg font-semibold shadow-md"
             >
               {loading ? (
                 <span className="flex items-center justify-center space-x-2">
@@ -147,21 +147,13 @@ export function Login() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-secondary-600">
+            <p className="text-secondary-600 dark:text-secondary-400">
               Don't have an account?{' '}
-              <Link to="/register" className="font-medium text-primary-600 hover:text-primary-700">
+              <Link to="/register" className="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                 Sign up
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Demo notice */}
-        <div className="mt-8 p-4 bg-secondary-50 rounded-xl">
-          <p className="text-sm text-secondary-600 text-center">
-            <strong>Demo:</strong> Use any email/password to test the application.
-            This is a demonstration system with synthetic data.
-          </p>
         </div>
       </div>
     </div>

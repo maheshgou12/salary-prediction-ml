@@ -104,7 +104,7 @@ async def login(
     return Token(
         access_token=access_token,
         refresh_token=refresh_token,
-        expires_in=30 * 60  # 30 minutes in seconds
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
 
@@ -143,7 +143,7 @@ async def refresh_token(
         return Token(
             access_token=access_token,
             refresh_token=new_refresh_token,
-            expires_in=30 * 60
+            expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
         )
 
     except ValueError as e:
@@ -155,23 +155,49 @@ async def refresh_token(
 
 @router.post("/forgot-password")
 async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
-    """Email a password reset link to the user."""
+    """Email a password reset link to the registered user."""
     user = db.query(User).filter(User.email == request.email).first()
+    email_sent = False
     if user:
         from jose import jwt as _jwt
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=30)
         token = _jwt.encode(
             {"sub": str(user.id), "email": user.email, "type": "reset", "exp": expire},
             settings.SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )
-        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
-        send_email(
-            user.email,
-            "FairSalary AI - Password Reset",
-            f"Hi {user.full_name},\n\nClick the link below to reset your password (valid 15 minutes):\n{reset_link}\n\nIf you did not request this, ignore this email.",
+        reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+        plain_body = (
+            f"Hi {user.full_name},\n\n"
+            f"You requested to reset your password for FairSalary AI.\n\n"
+            f"Click the link below to set your new password (valid for 30 minutes):\n"
+            f"{reset_url}\n\n"
+            f"If you did not request this, please ignore this email.\n\n"
+            f"Best regards,\nFairSalary AI Team"
         )
-    return {"message": "If that email is registered, a reset link has been sent."}
+        html_body = f"""
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 580px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <h2 style="color: #0284c7; margin-top: 0;">FairSalary AI - Password Reset</h2>
+            <p style="color: #334155; font-size: 15px;">Hi <strong>{user.full_name}</strong>,</p>
+            <p style="color: #334155; font-size: 15px;">We received a request to reset your password. Click the button below to choose your new password:</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{reset_url}" style="background-color: #0284c7; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: 600; font-size: 15px; display: inline-block;">Reset Password</a>
+            </div>
+            <p style="color: #64748b; font-size: 13px;">This link is valid for 30 minutes. If you did not make this request, you can safely ignore this email.</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+            <p style="color: #94a3b8; font-size: 12px; word-break: break-all;">If the button does not work, copy and paste this link into your browser:<br/><a href="{reset_url}" style="color: #0284c7;">{reset_url}</a></p>
+        </div>
+        """
+        email_sent = send_email(
+            user.email,
+            "FairSalary AI - Reset Your Password",
+            plain_body,
+            html_body=html_body,
+        )
+    return {
+        "message": "If that email is registered, a password reset link has been sent to your email address. Please check your inbox.",
+        "email_sent": email_sent,
+    }
 
 
 @router.post("/reset-password")

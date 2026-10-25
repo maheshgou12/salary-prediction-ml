@@ -49,12 +49,46 @@ export function Results() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showExplanation, setShowExplanation] = useState(true)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (id) {
       fetchPrediction()
     }
   }, [id])
+
+  const handleShareResult = async () => {
+    if (!result) return
+    const shareText = `FairSalary AI Recommendation:\nPredicted: ${formatSalary(result.predicted_salary)} (Range: ${formatSalary(result.minimum_salary)} - ${formatSalary(result.maximum_salary)})\nConfidence: ${Math.round(result.confidence * 100)}%\nFairness Audited: Yes\nView details: ${window.location.href}`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'FairSalary AI Recommendation',
+          text: shareText,
+          url: window.location.href,
+        })
+        return
+      } catch (e) {
+        // Fall back to clipboard if dismissed
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareText)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    } catch {
+      const ta = document.createElement('textarea')
+      ta.value = shareText
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    }
+  }
 
   const fetchPrediction = async () => {
     try {
@@ -337,9 +371,22 @@ export function Results() {
               <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
               New Prediction
             </Link>
-            <button className="btn-outline w-full">
-              <Share2 className="w-4 h-4 mr-2" aria-hidden="true" />
-              Share Result
+            <button
+              onClick={handleShareResult}
+              className="btn-outline w-full flex items-center justify-center transition-colors"
+              title="Share or copy prediction result summary"
+            >
+              {copied ? (
+                <>
+                  <CheckCircle className="w-4 h-4 mr-2 text-success-600" aria-hidden="true" />
+                  <span className="text-success-600 font-medium">Copied to Clipboard!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-4 h-4 mr-2" aria-hidden="true" />
+                  <span>Share Result</span>
+                </>
+              )}
             </button>
           </div>
         </div>

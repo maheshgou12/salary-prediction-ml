@@ -1,22 +1,62 @@
+import socket
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from typing import Optional
 from app.config import settings
 
 
-def send_email(to_email: str, subject: str, body: str) -> bool:
+def _connect_smtp(host: str, port: int, timeout: int = 10):
+    """Connect to SMTP forcing IPv4 to prevent Windows/ISP IPv6 routing drops."""
+    orig_getaddrinfo = socket.getaddrinfo
+
+    def ipv4_getaddrinfo(h, p, family=0, socktype=0, proto=0, flags=0):
+        return orig_getaddrinfo(h, p, socket.AF_INET, socktype, proto, flags)
+
+    socket.getaddrinfo = ipv4_getaddrinfo
+    try:
+        if port == 465:
+            server = smtplib.SMTP_SSL(host, port, timeout=timeout)
+        else:
+            server = smtplib.SMTP(host, port, timeout=timeout)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+        return server
+    finally:
+        socket.getaddrinfo = orig_getaddrinfo
+
+
+def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] = None) -> bool:
     if not settings.SMTP_HOST or not settings.SMTP_USER:
         print(f"[email disabled] To: {to_email} | Subject: {subject}\n{body}")
         return False
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = settings.SMTP_USER
-    msg["To"] = to_email
+
+    if html_body:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = settings.SMTP_USER
+        msg["To"] = to_email
+        msg.attach(MIMEText(body, "plain"))
+        msg.attach(MIMEText(html_body, "html"))
+    else:
+        msg = MIMEText(body, "plain")
+        msg["Subject"] = subject
+        msg["From"] = settings.SMTP_USER
+        msg["To"] = to_email
+
+    port = settings.SMTP_PORT or 587
     try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT or 587, timeout=15) as server:
-            server.starttls()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD or "")
-            server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
+        server = _connect_smtp(settings.SMTP_HOST, port, timeout=10)
+        if settings.SMTP_PASSWORD:
+            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD.strip())
+        server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
+        server.quit()
+        print(f"[email sent] Successfully delivered reset email to {to_email}")
         return True
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"[email auth error] Gmail rejected credentials for {settings.SMTP_USER}: {e}")
+        return False
     except Exception as e:
-        print(f"[email error] {e}")
+        print(f"[email error] Failed sending email to {to_email}: {type(e).__name__}: {e}")
         return False

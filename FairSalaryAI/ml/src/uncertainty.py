@@ -1,4 +1,4 @@
-"""FairSalary AI - Uncertainty Quantification (Conformal Prediction)"""
+import json
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -206,16 +206,6 @@ def run_conformal_prediction(
     print(f"  - conformal_predictions.csv")
 
     return summary
-
-
-def load_data(data_path: str | Path) -> pd.DataFrame:
-    """Load the salary dataset."""
-    return pd.read_csv(data_path)
-
-
-def load_model(model_path: str | Path):
-    """Load the trained model pipeline."""
-    return joblib.load(model_path)
 
 
 if __name__ == '__main__':

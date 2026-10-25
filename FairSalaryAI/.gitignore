@@ -62,6 +62,8 @@ build/
 *.sqlite
 *.sqlite3
 *.db-journal
+*.db-shm
+*.db-wal
 
 # ML/Models
 *.joblib

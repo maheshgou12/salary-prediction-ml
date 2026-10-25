@@ -1,4 +1,5 @@
-"""FairSalary AI - Prediction Interface"""
+import json
+import os
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -128,8 +129,20 @@ def run_prediction(
     conformal_path: str | Path = 'ml/models/conformal_summary.json',
 ) -> Dict[str, Any]:
     """Run a single salary prediction."""
-    model = load_model(model_path)
-    conformal_q = load_conformal_quantile(conformal_path)
+    model_p = Path(model_path)
+    conformal_p = Path(conformal_path)
+    if not model_p.exists():
+        # Fallback to FairSalaryAI relative path if run from project root
+        alt = Path(__file__).resolve().parents[1] / "models" / model_p.name
+        if alt.exists():
+            model_p = alt
+    if not conformal_p.exists():
+        alt = Path(__file__).resolve().parents[1] / "models" / conformal_p.name
+        if alt.exists():
+            conformal_p = alt
+
+    model = load_model(model_p)
+    conformal_q = load_conformal_quantile(conformal_p)
 
     predicted, lower, upper, confidence = predict_salary(model, candidate_data, conformal_q)
 
@@ -149,11 +162,6 @@ def run_prediction(
     }
 
     return result
-
-
-def load_model(model_path: str | Path):
-    """Load the trained model pipeline."""
-    return joblib.load(model_path)
 
 
 if __name__ == '__main__':

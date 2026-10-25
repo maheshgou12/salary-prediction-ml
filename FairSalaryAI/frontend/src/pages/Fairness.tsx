@@ -68,6 +68,63 @@ export function Fairness() {
     await fetchDashboard()
   }
 
+  const exportReport = () => {
+    if (!dashboard) return
+
+    const lines: string[] = []
+    lines.push('FAIRSALARY AI - FAIRNESS & BIAS AUDIT REPORT')
+    lines.push(`Generated Date,${new Date().toISOString()}`)
+    lines.push(`Overall Status,${dashboard.overall_status}`)
+    lines.push('')
+    lines.push('PROTECTED ATTRIBUTE METRICS')
+    lines.push('Attribute,Status,Demographic Parity Diff,Mean Disparity ($),Remediation Recommendations')
+
+    dashboard.protected_attributes.forEach((attr) => {
+      const recs = attr.recommendations && attr.recommendations.length > 0
+        ? `"${attr.recommendations.join('; ').replace(/"/g, '""')}"`
+        : '"None"'
+      lines.push(`${attr.attribute},${attr.status},${attr.demographic_parity_difference.toFixed(4)},${attr.mean_prediction_difference.toFixed(2)},${recs}`)
+    })
+
+    lines.push('')
+    lines.push('GROUP-LEVEL DEMOGRAPHIC BREAKDOWN')
+    lines.push('Attribute,Group,Count,Mean Predicted Salary,Mean Actual Salary,MAE,RMSE,Bias ($)')
+
+    dashboard.protected_attributes.forEach((attr) => {
+      attr.groups?.forEach((grp) => {
+        lines.push([
+          attr.attribute,
+          `"${grp.group}"`,
+          grp.count,
+          Math.round(grp.mean_predicted),
+          grp.mean_actual ? Math.round(grp.mean_actual) : 'N/A',
+          grp.mae ? grp.mae.toFixed(2) : 'N/A',
+          grp.rmse ? grp.rmse.toFixed(2) : 'N/A',
+          Math.round(grp.bias),
+        ].join(','))
+      })
+    })
+
+    if (dashboard.recommendations && dashboard.recommendations.length > 0) {
+      lines.push('')
+      lines.push('AUDIT RECOMMENDATIONS')
+      dashboard.recommendations.forEach((rec, i) => {
+        lines.push(`${i + 1},"${rec.replace(/"/g, '""')}"`)
+      })
+    }
+
+    const csvContent = lines.join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `fairness_audit_report_${new Date().toISOString().slice(0, 10)}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -117,7 +174,7 @@ export function Fairness() {
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
             Refresh
           </button>
-          <button className="btn-primary">
+          <button onClick={exportReport} className="btn-primary" title="Export Fairness Audit CSV Report">
             <Download className="w-4 h-4 mr-2" aria-hidden="true" />
             Export Report
           </button>

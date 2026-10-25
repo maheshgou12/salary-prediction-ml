@@ -8,7 +8,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from app.config import settings
+from app.config import settings, PROJECT_ROOT
 
 warnings.filterwarnings("ignore")
 
@@ -110,7 +110,7 @@ class PredictionService:
     ) -> Tuple[float, float, float]:
         """Calculate prediction interval."""
         # Try to load conformal prediction quantile
-        conformal_path = "ml/models/conformal_summary.json"
+        conformal_path = str(PROJECT_ROOT / "ml" / "models" / "conformal_summary.json")
         if os.path.exists(conformal_path):
             with open(conformal_path, "r") as f:
                 conformal = json.load(f)
@@ -139,10 +139,20 @@ class PredictionService:
 
             X = self._prepare_input(candidate_data)
 
-            # Get preprocessor and model from pipeline
+            # Get preprocessor and model from pipeline or stacking ensemble
             if hasattr(self.model, "named_steps"):
                 preprocessor = self.model.named_steps["preprocessor"]
                 regressor = self.model.named_steps["model"]
+            elif hasattr(self.model, "named_estimators_"):
+                # Use base tree estimator pipeline (LightGBM/CatBoost/XGBoost) for fast and exact SHAP tree values
+                sub_pipeline = (
+                    self.model.named_estimators_.get("LightGBM")
+                    or self.model.named_estimators_.get("CatBoost")
+                    or self.model.named_estimators_.get("XGBoost")
+                    or list(self.model.named_estimators_.values())[0]
+                )
+                preprocessor = sub_pipeline.named_steps["preprocessor"]
+                regressor = sub_pipeline.named_steps["model"]
             else:
                 return []
 
@@ -157,16 +167,16 @@ class PredictionService:
             feature_names = list(num_features) + cat_features
 
             # Create explainer
-            if hasattr(regressor, "coef_"):
-                explainer = shap.LinearExplainer(regressor, X_transformed)
-            elif hasattr(regressor, "tree_"):
-                explainer = shap.TreeExplainer(regressor, X_transformed)
-            else:
-                # Ensemble or other - use KernelExplainer with small background
-                def predict_fn(X_raw):
-                    return self.model.predict(X_raw)
-                background = X_transformed[:min(10, len(X_transformed))]
-                explainer = shap.KernelExplainer(predict_fn, background)
+            try:
+                explainer = shap.TreeExplainer(regressor)
+                shap_values = explainer.shap_values(X_transformed)
+            except Exception:
+                if hasattr(regressor, "coef_"):
+                    explainer = shap.LinearExplainer(regressor, X_transformed)
+                    shap_values = explainer.shap_values(X_transformed)
+                else:
+                    explainer = shap.Explainer(regressor, X_transformed)
+                    shap_values = explainer(X_transformed).values
 
             shap_values = explainer.shap_values(X_transformed)
             if isinstance(shap_values, list):

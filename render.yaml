@@ -7,11 +7,21 @@ services:
     startCommand: cd FairSalaryAI/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
       - key: DATABASE_URL
         value: sqlite:///./fairsalary.db
       - key: SECRET_KEY
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: "43200"
+        value: "525600"
       - key: FRONTEND_URL
-        value: "https://your-frontend.vercel.app"
+        value: "https://frontend-six-zeta-70.vercel.app"
+      - key: SMTP_HOST
+        value: "smtp.gmail.com"
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false

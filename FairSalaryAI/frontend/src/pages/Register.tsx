@@ -4,10 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { Calculator, Mail, Lock, User, AlertCircle, Eye, EyeOff, CheckCircle, AlertTriangle } from 'lucide-react'
 
 const passwordRequirements = [
-  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
-  { label: 'One uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
-  { label: 'One lowercase letter', test: (p: string) => /[a-z]/.test(p) },
-  { label: 'One number', test: (p: string) => /\d/.test(p) },
+  { label: 'At least 6 characters', test: (p: string) => p.length >= 6 },
 ]
 
 export function Register() {
@@ -36,9 +33,8 @@ export function Register() {
       return
     }
 
-    const failedRequirements = passwordRequirements.filter(req => !req.test(formData.password))
-    if (failedRequirements.length > 0) {
-      setError(`Password must meet all requirements`)
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters')
       return
     }
 
@@ -75,24 +71,24 @@ export function Register() {
   const passwordStrength = getPasswordStrength(formData.password)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50 via-white to-secondary-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50 via-white to-secondary-50 dark:from-secondary-950 dark:via-secondary-900 dark:to-secondary-950 px-4 py-12 transition-colors">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center shadow-md">
               <Calculator className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-secondary-900">FairSalary AI</span>
+            <span className="text-2xl font-bold text-secondary-900 dark:text-white">FairSalary AI</span>
           </Link>
-          <h1 className="text-3xl font-bold text-secondary-900">Create your account</h1>
-          <p className="text-secondary-600 mt-2">Start making fair salary decisions today</p>
+          <h1 className="text-3xl font-bold text-secondary-900 dark:text-white">Create your account</h1>
+          <p className="text-secondary-600 dark:text-secondary-400 mt-2">Start making fair salary decisions today</p>
         </div>
 
         {/* Register Form */}
-        <div className="card p-8">
+        <div className="card p-8 bg-white dark:bg-secondary-900/90 dark:border dark:border-secondary-800 shadow-xl backdrop-blur-sm">
           {error && (
-            <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 border border-danger-200 rounded-lg text-danger-700" role="alert">
+            <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 dark:bg-danger-950/40 border border-danger-200 dark:border-danger-800 rounded-lg text-danger-700 dark:text-danger-300" role="alert">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               <span className="text-sm">{error}</span>
             </div>
@@ -100,7 +96,7 @@ export function Register() {
 
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div>
-              <label htmlFor="full_name" className="label">
+              <label htmlFor="full_name" className="label text-secondary-700 dark:text-secondary-200">
                 Full name
               </label>
               <div className="relative mt-1.5">
@@ -113,7 +109,7 @@ export function Register() {
                   required
                   value={formData.full_name}
                   onChange={handleChange}
-                  className="input pl-10"
+                  className="input pl-10 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500"
                   placeholder="John Doe"
                   disabled={loading}
                 />
@@ -121,7 +117,7 @@ export function Register() {
             </div>
 
             <div>
-              <label htmlFor="email" className="label">
+              <label htmlFor="email" className="label text-secondary-700 dark:text-secondary-200">
                 Email address
               </label>
               <div className="relative mt-1.5">
@@ -134,7 +130,7 @@ export function Register() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="input pl-10"
+                  className="input pl-10 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500"
                   placeholder="you@example.com"
                   disabled={loading}
                 />
@@ -142,7 +138,7 @@ export function Register() {
             </div>
 
             <div>
-              <label htmlFor="password" className="label">
+              <label htmlFor="password" className="label text-secondary-700 dark:text-secondary-200">
                 Password
               </label>
               <div className="relative mt-1.5">
@@ -155,14 +151,14 @@ export function Register() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="input pl-10 pr-12"
-                  placeholder="Create a strong password"
+                  className="input pl-10 pr-12 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500"
+                  placeholder="At least 6 characters"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -172,12 +168,12 @@ export function Register() {
               {/* Password Strength */}
               <div className="mt-2">
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-secondary-600">Password strength</span>
-                  <span className={`font-medium px-2 py-0.5 rounded ${passwordStrength.bg} ${passwordStrength.color}`}>
+                  <span className="text-secondary-600 dark:text-secondary-400">Password strength</span>
+                  <span className={`font-medium px-2 py-0.5 rounded text-xs ${passwordStrength.bg} ${passwordStrength.color}`}>
                     {passwordStrength.label}
                   </span>
                 </div>
-                <div className="h-1.5 bg-secondary-200 rounded-full overflow-hidden mt-1">
+                <div className="h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden mt-1">
                   <div
                     className={`h-full rounded-full transition-all duration-300 ${
                       passwordStrength.color.replace('text-', 'bg-')
@@ -191,9 +187,9 @@ export function Register() {
                       {passwordRequirements[i].test(formData.password) ? (
                         <CheckCircle className="w-4 h-4 text-success-500 flex-shrink-0" aria-hidden="true" />
                       ) : (
-                        <AlertTriangle className="w-4 h-4 text-secondary-300 flex-shrink-0" aria-hidden="true" />
+                        <AlertTriangle className="w-4 h-4 text-secondary-400 dark:text-secondary-500 flex-shrink-0" aria-hidden="true" />
                       )}
-                      <span className={req.test(formData.password) ? 'text-secondary-500' : 'text-secondary-400'}>
+                      <span className={req.test(formData.password) ? 'text-secondary-700 dark:text-secondary-300' : 'text-secondary-400 dark:text-secondary-500'}>
                         {req.label}
                       </span>
                     </li>
@@ -203,7 +199,7 @@ export function Register() {
             </div>
 
             <div>
-              <label htmlFor="confirm_password" className="label">
+              <label htmlFor="confirm_password" className="label text-secondary-700 dark:text-secondary-200">
                 Confirm password
               </label>
               <div className="relative mt-1.5">
@@ -216,13 +212,13 @@ export function Register() {
                   required
                   value={formData.confirm_password}
                   onChange={handleChange}
-                  className={`input pl-10 ${formData.confirm_password && formData.confirm_password !== formData.password ? 'input-error' : ''}`}
+                  className={`input pl-10 bg-white dark:bg-secondary-800/80 dark:text-white dark:border-secondary-700 focus:dark:border-primary-500 ${formData.confirm_password && formData.confirm_password !== formData.password ? 'border-danger-500 dark:border-danger-500' : ''}`}
                   placeholder="Confirm your password"
                   disabled={loading}
                 />
               </div>
               {formData.confirm_password && formData.confirm_password !== formData.password && (
-                <p className="mt-1.5 text-sm text-danger-600 flex items-center space-x-1">
+                <p className="mt-1.5 text-sm text-danger-600 dark:text-danger-400 flex items-center space-x-1">
                   <AlertCircle className="w-4 h-4" aria-hidden="true" />
                   <span>Passwords do not match</span>
                 </p>
@@ -234,20 +230,21 @@ export function Register() {
                 type="checkbox"
                 id="terms"
                 required
-                className="w-4 h-4 mt-0.5 rounded border-secondary-300 text-primary-600 focus:ring-primary-500"
+                defaultChecked
+                className="w-4 h-4 mt-0.5 rounded border-secondary-300 dark:border-secondary-600 text-primary-600 focus:ring-primary-500 dark:bg-secondary-800"
               />
-              <label htmlFor="terms" className="text-sm text-secondary-600">
+              <label htmlFor="terms" className="text-sm text-secondary-600 dark:text-secondary-400">
                 I agree to the{' '}
-                <a href="#" className="text-primary-600 hover:text-primary-700">Terms of Service</a>{' '}
+                <a href="#" className="text-primary-600 dark:text-primary-400 hover:text-primary-700">Terms of Service</a>{' '}
                 and{' '}
-                <a href="#" className="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+                <a href="#" className="text-primary-600 dark:text-primary-400 hover:text-primary-700">Privacy Policy</a>
               </label>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 text-lg"
+              className="w-full btn-primary py-3 text-lg font-semibold shadow-md"
             >
               {loading ? (
                 <span className="flex items-center justify-center space-x-2">
@@ -276,20 +273,13 @@ export function Register() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-secondary-600">
+            <p className="text-secondary-600 dark:text-secondary-400">
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-primary-600 hover:text-primary-700">
+              <Link to="/login" className="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                 Sign in
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Demo notice */}
-        <div className="mt-8 p-4 bg-secondary-50 rounded-xl">
-          <p className="text-sm text-secondary-600 text-center">
-            <strong>Demo:</strong> This is a demonstration system. Any email/password combination will work.
-          </p>
         </div>
       </div>
     </div>

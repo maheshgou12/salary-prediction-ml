@@ -22,7 +22,11 @@ PROJECT_ROOT = get_project_root()
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=[
+            ".env",
+            str(PROJECT_ROOT / "backend" / ".env"),
+            str(PROJECT_ROOT / ".env"),
+        ],
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore"
@@ -41,20 +45,35 @@ class Settings(BaseSettings):
 
     # Database
     DATABASE_URL: str = Field(
-        default="postgresql://fairuser:fairpass@localhost:5432/fairsalary",
-        description="PostgreSQL connection string"
+        default=f"sqlite:///{PROJECT_ROOT.as_posix()}/backend/fairsalary.db",
+        description="Database connection string"
     )
     DATABASE_POOL_SIZE: int = 5
     DATABASE_MAX_OVERFLOW: int = 10
 
-    # Security
+    @property
+    def resolved_database_url(self) -> str:
+        url = self.DATABASE_URL
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://"):]
+        if url.startswith("sqlite:///"):
+            path_part = url[len("sqlite:///"):]
+            if path_part.startswith("./"):
+                path_part = path_part[2:]
+            p = Path(path_part)
+            if not p.is_absolute():
+                full_path = (PROJECT_ROOT / "backend" / path_part).resolve()
+                return f"sqlite:///{full_path.as_posix()}"
+        return url
+
+    # Security (1-year non-expiring tokens for smooth continuous usage)
     SECRET_KEY: str = Field(
         default="your-super-secret-key-change-in-production-min-32-chars",
         description="JWT signing secret"
     )
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 525600  # 365 days
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 365
     BCRYPT_ROUNDS: int = 12
 
     # CORS

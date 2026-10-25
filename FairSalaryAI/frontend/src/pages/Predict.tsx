@@ -98,18 +98,6 @@ export function Predict() {
         </p>
       </div>
 
-      {/* Fairness Notice */}
-      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl flex items-start space-x-3">
-        <Shield className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
-        <div>
-          <h3 className="font-medium text-primary-800">Fairness Notice</h3>
-          <p className="text-primary-700 text-sm mt-1">
-            This prediction is made without using protected attributes (gender, age). The model is audited
-            for demographic parity across protected groups. Results include fairness analysis.
-          </p>
-        </div>
-      </div>
-
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {error && (

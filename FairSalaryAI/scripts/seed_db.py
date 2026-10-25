@@ -4,9 +4,9 @@ import json
 import sqlite3
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "backend" / "fairsalary.db"
-CSV = ROOT / "ml" / "data" / "salary_data.csv"
+CSV = ROOT / "ml" / "data" / "raw" / "salary_data.csv"
 
 EDU_MAP = {
     "High School": "High School",
@@ -17,7 +17,8 @@ EDU_MAP = {
 }
 
 con = sqlite3.connect(DB)
-rows = list(csv.DictReader(open(CSV)))
+with open(CSV, mode="r", encoding="utf-8") as f:
+    rows = list(csv.DictReader(f))
 data = []
 for r in rows:
     skills = json.dumps([f"skill{i}" for i in range(int(float(r["skills_count"] or 0)))])
