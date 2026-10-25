@@ -47,16 +47,23 @@ def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] 
 
     port = settings.SMTP_PORT or 587
     try:
-        server = _connect_smtp(settings.SMTP_HOST, port, timeout=10)
+        server = _connect_smtp(settings.SMTP_HOST, port, timeout=4)
         if settings.SMTP_PASSWORD:
             server.login(settings.SMTP_USER, settings.SMTP_PASSWORD.strip())
         server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
         server.quit()
-        print(f"[email sent] Successfully delivered reset email to {to_email}")
+        print(f"[email sent] Successfully delivered reset email via port {port} to {to_email}")
         return True
-    except smtplib.SMTPAuthenticationError as e:
-        print(f"[email auth error] Gmail rejected credentials for {settings.SMTP_USER}: {e}")
-        return False
-    except Exception as e:
-        print(f"[email error] Failed sending email to {to_email}: {type(e).__name__}: {e}")
-        return False
+    except Exception as e587:
+        # Fallback to SSL port 465
+        try:
+            server = _connect_smtp(settings.SMTP_HOST, 465, timeout=4)
+            if settings.SMTP_PASSWORD:
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD.strip())
+            server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
+            server.quit()
+            print(f"[email sent ssl] Successfully delivered reset email via port 465 to {to_email}")
+            return True
+        except Exception as e465:
+            print(f"[email error] Port {port} ({e587}) and Port 465 ({e465}) failed for {to_email}")
+            return False

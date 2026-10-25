@@ -7,16 +7,25 @@ export function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [directResetUrl, setDirectResetUrl] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setDirectResetUrl('')
     setLoading(true)
     try {
       const res = await api.forgotPassword(email)
-      setSuccess(res.message || 'If that email is registered, a password reset link has been sent to your inbox.')
+      if (res.email_sent) {
+        setSuccess('Password reset link sent! Please check your email inbox.')
+      } else if (res.reset_url) {
+        setSuccess('Password reset link generated successfully!')
+        setDirectResetUrl(res.reset_url)
+      } else {
+        setSuccess(res.message || 'If that email is registered, a password reset link has been processed.')
+      }
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Something went wrong. Please check your email address.')
     } finally {
@@ -42,6 +51,20 @@ export function ForgotPassword() {
           <div className="mb-4 flex items-center space-x-2 p-4 bg-success-50 dark:bg-success-900/30 border border-success-200 dark:border-success-800 rounded-lg text-success-800 dark:text-success-200">
             <CheckCircle className="w-5 h-5 flex-shrink-0 text-success-600 dark:text-success-400" />
             <span className="text-sm font-medium">{success}</span>
+          </div>
+        )}
+
+        {directResetUrl && (
+          <div className="mb-6 p-4 bg-primary-50 dark:bg-primary-950/50 border border-primary-200 dark:border-primary-800 rounded-lg">
+            <p className="text-xs text-primary-800 dark:text-primary-300 font-medium mb-2.5">
+              Password Reset Link Generated:
+            </p>
+            <a
+              href={directResetUrl}
+              className="inline-flex items-center text-xs font-semibold text-white bg-primary-600 hover:bg-primary-700 px-3.5 py-2 rounded-md transition shadow-sm"
+            >
+              Click here to Set New Password ➔
+            </a>
           </div>
         )}
 
