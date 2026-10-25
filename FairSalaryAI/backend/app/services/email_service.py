@@ -28,6 +28,61 @@ def _connect_smtp(host: str, port: int, timeout: int = 10):
 
 
 def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] = None) -> bool:
+    # 1. Try Resend HTTPS API (Port 443 - Bypasses all Render SMTP firewall blocks)
+    if settings.RESEND_API_KEY:
+        try:
+            import requests
+            r = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {settings.RESEND_API_KEY.strip()}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "from": "FairSalary AI <onboarding@resend.dev>",
+                    "to": [to_email],
+                    "subject": subject,
+                    "text": body,
+                    "html": html_body or body,
+                },
+                timeout=5,
+            )
+            if r.status_code in (200, 201):
+                print(f"[email sent via Resend HTTPS API] to {to_email}")
+                return True
+            else:
+                print(f"[Resend API error] Status {r.status_code}: {r.text}")
+        except Exception as e_resend:
+            print(f"[Resend exception]: {e_resend}")
+
+    # 2. Try Brevo HTTPS API (Port 443 - Bypasses all Render SMTP firewall blocks)
+    if settings.BREVO_API_KEY:
+        try:
+            import requests
+            r = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "api-key": settings.BREVO_API_KEY.strip(),
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "sender": {"name": "FairSalary AI", "email": settings.SMTP_USER or "support@fairsalary.ai"},
+                    "to": [{"email": to_email}],
+                    "subject": subject,
+                    "textContent": body,
+                    "htmlContent": html_body or body,
+                },
+                timeout=5,
+            )
+            if r.status_code in (200, 201):
+                print(f"[email sent via Brevo HTTPS API] to {to_email}")
+                return True
+            else:
+                print(f"[Brevo API error] Status {r.status_code}: {r.text}")
+        except Exception as e_brevo:
+            print(f"[Brevo exception]: {e_brevo}")
+
+    # 3. SMTP Fallback (For local development or paid Render tiers with port 587/465 open)
     if not settings.SMTP_HOST or not settings.SMTP_USER:
         print(f"[email disabled] To: {to_email} | Subject: {subject}\n{body}")
         return False

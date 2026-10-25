@@ -201,7 +201,6 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
     return {
         "message": "If that email is registered, a password reset link has been sent to your email address. Please check your inbox.",
         "email_sent": email_sent,
-        "reset_url": reset_url if user else None,
     }
 
 

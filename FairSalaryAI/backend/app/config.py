@@ -100,6 +100,8 @@ class Settings(BaseSettings):
 
     # External Services
     SENTRY_DSN: Optional[str] = None
+    RESEND_API_KEY: Optional[str] = None
+    BREVO_API_KEY: Optional[str] = None
     SMTP_HOST: Optional[str] = "smtp.gmail.com"
     SMTP_PORT: Optional[int] = 587
     SMTP_USER: Optional[str] = "maheshburra2712@gmail.com"
