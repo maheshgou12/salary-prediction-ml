@@ -118,7 +118,7 @@ This guide covers deploying FairSalary AI to production using:
 
 | Key | Value | Notes |
 |-----|-------|-------|
-| `VITE_API_URL` | `https://fairsalary-backend.onrender.com/api` | Backend URL |
+| `VITE_API_URL` | `https://fairsalaryy-backend.onrender.com` | Backend URL |
 
 ### Deploy
 

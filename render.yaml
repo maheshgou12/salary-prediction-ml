@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fairsalary-backend
+    name: fairsalaryy-backend
     env: python
     rootDir: .
     buildCommand: pip install -r FairSalaryAI/backend/requirements.txt
@@ -16,7 +16,7 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "525600"
       - key: FRONTEND_URL
-        value: "https://frontend-six-zeta-70.vercel.app"
+        value: "https://salary-prediction-ml-ivory.vercel.app"
       - key: SMTP_HOST
         value: "smtp.gmail.com"
       - key: SMTP_PORT

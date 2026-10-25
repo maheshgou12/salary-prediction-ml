@@ -1,6 +1,12 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://fairsalaryy-backend.onrender.com'
+let rawApiUrl = (import.meta.env.VITE_API_URL || 'https://fairsalaryy-backend.onrender.com').trim()
+if (rawApiUrl.includes('fairsalary-backend.onrender.com')) {
+  rawApiUrl = rawApiUrl.replace('fairsalary-backend.onrender.com', 'fairsalaryy-backend.onrender.com')
+}
+rawApiUrl = rawApiUrl.replace(/\/+$/, '').replace(/\/api$/, '')
+
+const API_URL = rawApiUrl
 
 const client = axios.create({
   baseURL: `${API_URL}/api`,

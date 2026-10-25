@@ -213,7 +213,7 @@ Instead of Render's 30-day temporary database, use **[Neon.tech](https://neon.te
 2. Click **New +** ➔ **Web Service** (not blueprint).
 3. Connect your GitHub repository (`maheshgou12/salary-prediction-ml`).
 4. Set the following settings:
-   * **Name**: `fairsalary-backend`
+   * **Name**: `fairsalaryy-backend`
    * **Region**: Oregon (US West) or Ohio (US East)
    * **Root Directory**: `.` (leave empty or root)
    * **Runtime**: `Python 3`
@@ -225,13 +225,13 @@ Instead of Render's 30-day temporary database, use **[Neon.tech](https://neon.te
    * `SECRET_KEY`: `my_super_secret_production_key_2026_xyz`
    * `ACCESS_TOKEN_EXPIRE_MINUTES`: `525600` *(1 full year - tokens never expire)*
    * `REFRESH_TOKEN_EXPIRE_DAYS`: `365` *(1 full year)*
-   * `FRONTEND_URL`: `https://frontend-six-zeta-70.vercel.app`
+   * `FRONTEND_URL`: `https://salary-prediction-ml-ivory.vercel.app`
    * `SMTP_HOST`: `smtp.gmail.com`
    * `SMTP_PORT`: `587`
    * `SMTP_USER`: `maheshburra2712@gmail.com`
    * `SMTP_PASSWORD`: `your-16-character-app-password`
 6. Click **Deploy Web Service**. You will get your backend URL:  
-   👉 **`https://fairsalary-backend.onrender.com`**
+   👉 **`https://fairsalaryy-backend.onrender.com`**
 
 ---
 
@@ -241,7 +241,7 @@ Render free services sleep after 15 minutes of inactivity. To keep it running 24
 2. Click **Add New Monitor**:
    * **Monitor Type**: `HTTP(s)`
    * **Friendly Name**: `FairSalary Backend Keep-Alive`
-   * **URL (or IP)**: `https://fairsalary-backend.onrender.com/health`
+   * **URL (or IP)**: `https://fairsalaryy-backend.onrender.com/health`
    * **Monitoring Interval**: `Every 5 minutes`
 3. Click **Create Monitor**.
 4. **Result**: UptimeRobot pings your backend `/health` endpoint every 5 minutes so it **never sleeps**, ensuring instant responses whenever someone opens your application.
@@ -260,9 +260,9 @@ Render free services sleep after 15 minutes of inactivity. To keep it running 24
 3. Set **Root Directory** to `FairSalaryAI/frontend`.
 4. Under **Environment Variables**, add:
    * **Name**: `VITE_API_URL`
-   * **Value**: `https://fairsalary-backend.onrender.com`
+   * **Value**: `https://fairsalaryy-backend.onrender.com`
 5. Click **Deploy**. You will get your live frontend URL:  
-   👉 **`https://frontend-six-zeta-70.vercel.app`**
+   👉 **`https://salary-prediction-ml-ivory.vercel.app`**
 
 ---
 
