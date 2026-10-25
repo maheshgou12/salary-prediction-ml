@@ -47,3 +47,22 @@ async def readiness_check():
 async def liveness_check():
     """Kubernetes liveness probe."""
     return {"alive": True}
+
+
+@router.get("/smtp")
+async def test_smtp_connection():
+    import socket
+    results = {}
+    for port in [587, 465, 25]:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(3)
+        try:
+            s.connect(("smtp.gmail.com", port))
+            results[f"port_{port}"] = "CONNECTED"
+            s.close()
+        except Exception as e:
+            results[f"port_{port}"] = f"FAILED: {type(e).__name__}: {e}"
+    from app.services.email_service import send_email
+    email_res = send_email("maheshburra2712@gmail.com", "Diagnostics Test", "Testing from Render")
+    results["send_email_result"] = email_res
+    return results
