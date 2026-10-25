@@ -65,4 +65,7 @@ async def test_smtp_connection():
     from app.services.email_service import send_email
     email_res = send_email("maheshburra2712@gmail.com", "Diagnostics Test", "Testing from Render")
     results["send_email_result"] = email_res
+    results["resend_key_configured"] = bool(settings.RESEND_API_KEY)
+    results["brevo_key_configured"] = bool(settings.BREVO_API_KEY)
+    results["smtp_user_configured"] = bool(settings.SMTP_USER)
     return results
