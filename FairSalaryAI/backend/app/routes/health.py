@@ -46,32 +46,4 @@ async def readiness_check():
 @router.get("/live")
 async def liveness_check():
     """Kubernetes liveness probe."""
-    return {"alive": True}
-
-
-@router.get("/smtp")
-async def test_smtp_connection():
-    results = {}
-    results["resend_key_configured"] = bool(settings.RESEND_API_KEY)
-    if settings.RESEND_API_KEY:
-        import httpx
-        try:
-            with httpx.Client(timeout=10.0) as client:
-                r = client.post(
-                    "https://api.resend.com/emails",
-                    headers={
-                        "Authorization": f"Bearer {settings.RESEND_API_KEY.strip()}",
-                        "Content-Type": "application/json",
-                    },
-                    json={
-                        "from": "onboarding@resend.dev",
-                        "to": ["maheshburra2712@gmail.com"],
-                        "subject": "FairSalary AI - Diagnostic Test",
-                        "text": "Testing Resend email delivery from Render",
-                    },
-                )
-            results["resend_status"] = r.status_code
-            results["resend_response"] = r.text
-        except Exception as e:
-            results["resend_error"] = str(e)
-    return results
+    return {"alive": True}
