@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd FairSalaryAI/frontend && npm install && npm run build",
+  "outputDirectory": "FairSalaryAI/frontend/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
