@@ -15,8 +15,8 @@
 
 ## 🌐 Live Deployments
 
-* **Frontend Dashboard (Vercel)**: [https://frontend-six-zeta-70.vercel.app](https://frontend-six-zeta-70.vercel.app)
-* **Backend API Documentation (Render / Swagger)**: [https://fairsalary-backend.onrender.com/docs](https://fairsalary-backend.onrender.com/docs)
+* **Frontend Dashboard (Vercel)**: [https://salary-prediction-ml-ivory.vercel.app](https://salary-prediction-ml-ivory.vercel.app)
+* **Backend API Documentation (Render / Swagger)**: [https://fairsalaryy-backend.onrender.com/docs](https://fairsalaryy-backend.onrender.com/docs)
 * **Repository**: [https://github.com/maheshgou12/salary-prediction-ml](https://github.com/maheshgou12/salary-prediction-ml)
 
 ---
