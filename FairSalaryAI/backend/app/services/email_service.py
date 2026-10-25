@@ -31,22 +31,22 @@ def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] 
     # 1. Try Resend HTTPS API (Port 443 - Bypasses all Render SMTP firewall blocks)
     if settings.RESEND_API_KEY:
         try:
-            import requests
-            r = requests.post(
-                "https://api.resend.com/emails",
-                headers={
-                    "Authorization": f"Bearer {settings.RESEND_API_KEY.strip()}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "from": "onboarding@resend.dev",
-                    "to": [to_email.strip().lower()],
-                    "subject": subject,
-                    "text": body,
-                    "html": html_body or body,
-                },
-                timeout=5,
-            )
+            import httpx
+            with httpx.Client(timeout=10.0) as client:
+                r = client.post(
+                    "https://api.resend.com/emails",
+                    headers={
+                        "Authorization": f"Bearer {settings.RESEND_API_KEY.strip()}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "from": "onboarding@resend.dev",
+                        "to": [to_email.strip().lower()],
+                        "subject": subject,
+                        "text": body,
+                        "html": html_body or body,
+                    },
+                )
             if r.status_code in (200, 201):
                 print(f"[email sent via Resend HTTPS API] to {to_email}")
                 return True
@@ -58,22 +58,22 @@ def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] 
     # 2. Try Brevo HTTPS API (Port 443 - Bypasses all Render SMTP firewall blocks)
     if settings.BREVO_API_KEY:
         try:
-            import requests
-            r = requests.post(
-                "https://api.brevo.com/v3/smtp/email",
-                headers={
-                    "api-key": settings.BREVO_API_KEY.strip(),
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "sender": {"name": "FairSalary AI", "email": settings.SMTP_USER or "support@fairsalary.ai"},
-                    "to": [{"email": to_email}],
-                    "subject": subject,
-                    "textContent": body,
-                    "htmlContent": html_body or body,
-                },
-                timeout=5,
-            )
+            import httpx
+            with httpx.Client(timeout=10.0) as client:
+                r = client.post(
+                    "https://api.brevo.com/v3/smtp/email",
+                    headers={
+                        "api-key": settings.BREVO_API_KEY.strip(),
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "sender": {"name": "FairSalary AI", "email": settings.SMTP_USER or "support@fairsalary.ai"},
+                        "to": [{"email": to_email}],
+                        "subject": subject,
+                        "textContent": body,
+                        "htmlContent": html_body or body,
+                    },
+                )
             if r.status_code in (200, 201):
                 print(f"[email sent via Brevo HTTPS API] to {to_email}")
                 return True
