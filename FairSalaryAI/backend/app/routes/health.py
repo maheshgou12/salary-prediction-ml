@@ -51,17 +51,8 @@ async def liveness_check():
 
 @router.get("/smtp")
 async def test_smtp_connection():
-    import socket
     results = {}
-    for port in [587, 465, 25]:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(3)
-        try:
-            s.connect(("smtp.gmail.com", port))
-            results[f"port_{port}"] = "CONNECTED"
-            s.close()
-        except Exception as e:
-            results[f"port_{port}"] = f"FAILED: {type(e).__name__}: {e}"
+    results["resend_key_configured"] = bool(settings.RESEND_API_KEY)
     if settings.RESEND_API_KEY:
         import requests
         try:
@@ -74,17 +65,13 @@ async def test_smtp_connection():
                 json={
                     "from": "onboarding@resend.dev",
                     "to": ["maheshburra2712@gmail.com"],
-                    "subject": "FairSalary AI - Password Reset Test",
+                    "subject": "FairSalary AI - Diagnostic Test",
                     "text": "Testing Resend email delivery from Render",
                 },
-                timeout=5,
+                timeout=10,
             )
-            results["resend_api_status"] = r.status_code
-            results["resend_api_body"] = r.json() if "application/json" in r.headers.get("content-type", "") else r.text
+            results["resend_status"] = r.status_code
+            results["resend_response"] = r.text
         except Exception as e:
-            results["resend_api_error"] = str(e)
-
-    results["resend_key_configured"] = bool(settings.RESEND_API_KEY)
-    results["brevo_key_configured"] = bool(settings.BREVO_API_KEY)
-    results["smtp_user_configured"] = bool(settings.SMTP_USER)
+            results["resend_error"] = str(e)
     return results
