@@ -72,7 +72,7 @@ async def test_smtp_connection():
                     "Content-Type": "application/json",
                 },
                 json={
-                    "from": "FairSalary AI <onboarding@resend.dev>",
+                    "from": "onboarding@resend.dev",
                     "to": ["maheshburra2712@gmail.com"],
                     "subject": "FairSalary AI - Password Reset Test",
                     "text": "Testing Resend email delivery from Render",

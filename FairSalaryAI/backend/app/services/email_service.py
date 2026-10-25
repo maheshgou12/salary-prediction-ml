@@ -39,8 +39,8 @@ def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] 
                     "Content-Type": "application/json",
                 },
                 json={
-                    "from": "FairSalary AI <onboarding@resend.dev>",
-                    "to": [to_email],
+                    "from": "onboarding@resend.dev",
+                    "to": [to_email.strip().lower()],
                     "subject": subject,
                     "text": body,
                     "html": html_body or body,
