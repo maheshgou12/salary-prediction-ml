@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { Calculator, Mail, Lock, User, AlertCircle, Eye, EyeOff, CheckCircle, AlertTriangle } from 'lucide-react'
 
@@ -9,6 +9,7 @@ const passwordRequirements = [
 
 export function Register() {
   const { register } = useAuth()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -17,6 +18,7 @@ export function Register() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +28,7 @@ export function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
 
     // Validation
     if (formData.password !== formData.confirm_password) {
@@ -46,6 +49,15 @@ export function Register() {
         password: formData.password,
         full_name: formData.full_name,
       })
+      setSuccess('Account created successfully! Redirecting you to login...')
+      setTimeout(() => {
+        navigate('/login', {
+          state: {
+            email: formData.email,
+            message: 'Account created successfully! Please sign in with your email and password.',
+          },
+        })
+      }, 1500)
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Registration failed. Please try again.')
     } finally {
@@ -87,6 +99,13 @@ export function Register() {
 
         {/* Register Form */}
         <div className="card p-8 bg-white dark:bg-secondary-900/90 dark:border dark:border-secondary-800 shadow-xl backdrop-blur-sm">
+          {success && (
+            <div className="mb-6 flex items-center space-x-2 p-4 bg-success-50 dark:bg-success-950/40 border border-success-200 dark:border-success-800 rounded-lg text-success-700 dark:text-success-300" role="status">
+              <CheckCircle className="w-5 h-5 flex-shrink-0 text-success-600 dark:text-success-400" aria-hidden="true" />
+              <span className="text-sm font-medium">{success}</span>
+            </div>
+          )}
+
           {error && (
             <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 dark:bg-danger-950/40 border border-danger-200 dark:border-danger-800 rounded-lg text-danger-700 dark:text-danger-300" role="alert">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />

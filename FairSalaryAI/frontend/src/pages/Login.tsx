@@ -1,15 +1,26 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { Calculator, Mail, Lock, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Calculator, Mail, Lock, AlertCircle, Eye, EyeOff, CheckCircle } from 'lucide-react'
 
 export function Login() {
   const { login } = useAuth()
+  const location = useLocation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [infoMessage, setInfoMessage] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email)
+    }
+    if (location.state?.message) {
+      setInfoMessage(location.state.message)
+    }
+  }, [location.state])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,6 +53,13 @@ export function Login() {
 
         {/* Login Form */}
         <div className="card p-8 bg-white dark:bg-secondary-900/90 dark:border dark:border-secondary-800 shadow-xl backdrop-blur-sm">
+          {infoMessage && (
+            <div className="mb-6 flex items-center space-x-2 p-4 bg-success-50 dark:bg-success-950/40 border border-success-200 dark:border-success-800 rounded-lg text-success-700 dark:text-success-300" role="status">
+              <CheckCircle className="w-5 h-5 flex-shrink-0 text-success-600 dark:text-success-400" aria-hidden="true" />
+              <span className="text-sm font-medium">{infoMessage}</span>
+            </div>
+          )}
+
           {error && (
             <div className="mb-6 flex items-center space-x-2 p-4 bg-danger-50 dark:bg-danger-950/40 border border-danger-200 dark:border-danger-800 rounded-lg text-danger-700 dark:text-danger-300" role="alert">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />

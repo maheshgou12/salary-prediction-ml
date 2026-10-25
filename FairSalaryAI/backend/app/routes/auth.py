@@ -3,6 +3,7 @@ from datetime import timedelta
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -36,7 +37,8 @@ class ResetPasswordRequest(BaseModel):
 async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     """Register a new user."""
     # Check if email already exists
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    clean_email = user_data.email.strip().lower()
+    existing_user = db.query(User).filter(func.lower(User.email) == clean_email).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -48,8 +50,8 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
     # Create user
     user = User(
-        email=user_data.email,
-        full_name=user_data.full_name,
+        email=clean_email,
+        full_name=user_data.full_name.strip(),
         hashed_password=hashed_password,
     )
 
@@ -68,7 +70,8 @@ async def login(
 ):
     """Login and return JWT tokens."""
     # Find user
-    user = db.query(User).filter(User.email == credentials.email).first()
+    clean_email = credentials.email.strip().lower()
+    user = db.query(User).filter(func.lower(User.email) == clean_email).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -156,7 +159,8 @@ async def refresh_token(
 @router.post("/forgot-password")
 async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
     """Email a password reset link to the registered user."""
-    user = db.query(User).filter(User.email == request.email).first()
+    clean_email = request.email.strip().lower()
+    user = db.query(User).filter(func.lower(User.email) == clean_email).first()
     email_sent = False
     if user:
         from jose import jwt as _jwt

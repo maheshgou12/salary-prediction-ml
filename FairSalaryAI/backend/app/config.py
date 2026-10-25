@@ -76,9 +76,13 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 365
     BCRYPT_ROUNDS: int = 12
 
-    # CORS
-    FRONTEND_URL: str = "http://localhost:5173"
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    # CORS & Links
+    FRONTEND_URL: str = "https://salary-prediction-ml-ivory.vercel.app"
+    ALLOWED_ORIGINS: List[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://salary-prediction-ml-ivory.vercel.app",
+    ]
 
     # Model
     MODEL_PATH: str = str(PROJECT_ROOT / "ml" / "models" / "best_model.joblib")
@@ -94,12 +98,12 @@ class Settings(BaseSettings):
     ENABLE_SIMILAR_PROFILES: bool = True
     ENABLE_SALARY_RANGE: bool = True
 
-    # External Services (Optional)
+    # External Services
     SENTRY_DSN: Optional[str] = None
-    SMTP_HOST: Optional[str] = None
-    SMTP_PORT: Optional[int] = None
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
+    SMTP_HOST: Optional[str] = "smtp.gmail.com"
+    SMTP_PORT: Optional[int] = 587
+    SMTP_USER: Optional[str] = "maheshburra2712@gmail.com"
+    SMTP_PASSWORD: Optional[str] = "igoj tols awne bfmx"
 
 
 @lru_cache()
