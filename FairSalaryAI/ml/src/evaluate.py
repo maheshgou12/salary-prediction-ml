@@ -204,19 +204,12 @@ def plot_feature_importance(
     feature_names: List[str],
     importances: np.ndarray,
     top_k: int = 20,
-    output_path: Optional[str] = None,
+    output_path: Optional[str | Path] = None,
 ) -> plt.Figure:
-    """Plot feature importance.
-
-    Args:
-        feature_names: List of feature names.
-        importances: Array of importance values.
-        top_k: Number of top features to show.
-        output_path: Optional path to save figure.
-
-    Returns:
-        Matplotlib figure.
-    """
+    """Plot feature importance."""
+    if isinstance(top_k, (str, Path)):
+        output_path = top_k
+        top_k = 20
     # Sort by importance
     idx = np.argsort(importances)[::-1][:top_k]
     top_features = [feature_names[i] for i in idx]
@@ -357,9 +350,24 @@ def run_evaluation(
 
     # Feature importance (if available)
     try:
-        model_pipeline = model
-        preprocessor = model_pipeline.named_steps['preprocessor']
-        regressor = model_pipeline.named_steps['model']
+        if hasattr(model, 'named_steps'):
+            preprocessor = model.named_steps['preprocessor']
+            regressor = model.named_steps['model']
+        elif hasattr(model, 'named_estimators_'):
+            sub_pipeline = (
+                model.named_estimators_.get('LightGBM')
+                or model.named_estimators_.get('CatBoost')
+                or model.named_estimators_.get('XGBoost')
+                or list(model.named_estimators_.values())[0]
+            )
+            preprocessor = sub_pipeline.named_steps['preprocessor']
+            regressor = sub_pipeline.named_steps['model']
+        elif hasattr(model, 'estimators_'):
+            sub = model.estimators_[0]
+            preprocessor = sub.named_steps['preprocessor']
+            regressor = sub.named_steps['model']
+        else:
+            raise ValueError("Unsupported model type")
 
         if hasattr(regressor, 'coef_'):
             # Linear model

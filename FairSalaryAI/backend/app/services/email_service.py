@@ -27,7 +27,38 @@ def _connect_smtp(host: str, port: int, timeout: int = 10):
         socket.getaddrinfo = orig_getaddrinfo
 
 
+import os
+
+TEST_DOMAINS = (
+    "@example.com",
+    "@example.org",
+    "@example.net",
+    "@test.com",
+    "@test.org",
+    "@test.net",
+    "@localhost",
+    "@mock.com",
+)
+
+
+def is_test_or_dummy_recipient(email: str) -> bool:
+    """Check if recipient is a test/dummy address that should not receive real outbound email."""
+    if not email:
+        return True
+    cleaned = email.strip().lower()
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return True
+    if cleaned.endswith(TEST_DOMAINS) or cleaned.startswith(("test_", "dummy_", "mock_")):
+        return True
+    return False
+
+
 def send_email(to_email: str, subject: str, body: str, html_body: Optional[str] = None) -> bool:
+    # 0. Suppress real delivery for tests/dummy domains to prevent Mail Delivery Subsystem bounces
+    if is_test_or_dummy_recipient(to_email):
+        print(f"[test/dummy email suppressed - no actual SMTP dispatch] To: {to_email} | Subject: {subject}")
+        return True
+
     # 1. Try Resend HTTPS API (Port 443 - Bypasses all Render SMTP firewall blocks)
     if settings.RESEND_API_KEY:
         try:

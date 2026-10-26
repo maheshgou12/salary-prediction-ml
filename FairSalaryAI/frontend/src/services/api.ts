@@ -1,6 +1,16 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
-let rawApiUrl = (import.meta.env.VITE_API_URL || 'https://fairsalaryy-backend.onrender.com').trim()
+const isLocalhost = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' || 
+  window.location.hostname === '127.0.0.1' || 
+  window.location.hostname === ''
+)
+
+let rawApiUrl = (
+  import.meta.env.VITE_API_URL || 
+  (isLocalhost ? 'http://127.0.0.1:8000' : 'https://fairsalaryy-backend.onrender.com')
+).trim()
+
 if (rawApiUrl.includes('fairsalary-backend.onrender.com')) {
   rawApiUrl = rawApiUrl.replace('fairsalary-backend.onrender.com', 'fairsalaryy-backend.onrender.com')
 }
@@ -13,7 +23,7 @@ const client = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000,
+  timeout: 90000,
 })
 
 // Request interceptor to add auth token
@@ -43,7 +53,7 @@ client.interceptors.response.use(
 
         const response = await axios.post(`${API_URL}/api/auth/refresh`, {
           refresh_token: refreshToken,
-        })
+        }, { timeout: 90000 })
 
         const { access_token, refresh_token } = response.data
         localStorage.setItem('access_token', access_token)
@@ -54,10 +64,13 @@ client.interceptors.response.use(
         }
 
         return client(originalRequest)
-      } catch {
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-        window.location.href = '/login'
+      } catch (refreshError: any) {
+        // Only invalidate credentials if the server explicitly rejected the refresh token
+        if (refreshError?.response?.status === 401 || refreshError?.response?.status === 403) {
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+          window.location.href = '/login'
+        }
         return Promise.reject(error)
       }
     }

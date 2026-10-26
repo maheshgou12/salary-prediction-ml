@@ -45,8 +45,19 @@ ALL_FEATURES = ['years_experience', 'skills_count', 'previous_salary', 'intervie
 
 
 def load_data(data_path: str | Path) -> pd.DataFrame:
-    """Load the salary dataset."""
-    return pd.read_csv(data_path)
+    """Load the salary dataset with flexible path resolution."""
+    p = Path(data_path)
+    if not p.exists():
+        candidates = [
+            Path("FairSalaryAI") / p,
+            Path(__file__).resolve().parent.parent / "data" / "raw" / p.name,
+            Path(__file__).resolve().parent.parent.parent / p,
+        ]
+        for c in candidates:
+            if c.exists():
+                p = c
+                break
+    return pd.read_csv(p)
 
 
 def create_preprocessing_pipeline() -> ColumnTransformer:

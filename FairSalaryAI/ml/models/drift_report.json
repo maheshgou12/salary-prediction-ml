@@ -72,17 +72,17 @@
     ]
   },
   "prediction_drift": {
-    "prediction_psi": 0.04392101979172903,
-    "prediction_ks_statistic": 0.0248,
-    "prediction_ks_p_value": 0.6782919151382233,
+    "prediction_psi": 0.07026034473196109,
+    "prediction_ks_statistic": 0.0284,
+    "prediction_ks_p_value": 0.5062477684747336,
     "prediction_drift_detected": "False",
-    "reference_mean": 204261.3278048633,
-    "current_mean": 204123.3176230208,
-    "reference_std": 59402.97957201041,
-    "current_std": 58568.40648699996,
-    "mean_shift": -138.01018184251734
+    "reference_mean": 203796.3208019382,
+    "current_mean": 203976.46137148462,
+    "reference_std": 59115.18853492141,
+    "current_std": 58885.10757197135,
+    "mean_shift": 180.14056954643456
   },
   "reference_size": 5000,
   "current_size": 1000,
-  "timestamp": "2026-10-04T11:47:40.636498"
+  "timestamp": "2026-10-26T21:37:56.466895"
 }

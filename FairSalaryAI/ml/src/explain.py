@@ -58,19 +58,37 @@ def get_feature_names_after_preprocessing(
     return num_features + cat_feature_names
 
 
+def _extract_preprocessor_and_model(model):
+    """Extract preprocessor and regressor from Pipeline or StackingRegressor."""
+    if hasattr(model, 'named_steps'):
+        return model.named_steps['preprocessor'], model.named_steps['model']
+    elif hasattr(model, 'named_estimators_'):
+        sub_pipeline = (
+            model.named_estimators_.get('LightGBM')
+            or model.named_estimators_.get('CatBoost')
+            or model.named_estimators_.get('XGBoost')
+            or list(model.named_estimators_.values())[0]
+        )
+        return sub_pipeline.named_steps['preprocessor'], sub_pipeline.named_steps['model']
+    elif hasattr(model, 'estimators_'):
+        sub = model.estimators_[0]
+        if hasattr(sub, 'named_steps'):
+            return sub.named_steps['preprocessor'], sub.named_steps['model']
+    raise ValueError(f"Unsupported model type: {type(model)}")
+
+
 def create_shap_explainer(model, X_sample: pd.DataFrame) -> shap.Explainer:
     """Create a SHAP explainer for the model.
 
     Args:
-        model: Trained pipeline.
+        model: Trained pipeline or StackingRegressor.
         X_sample: Sample of training data for background distribution.
 
     Returns:
         SHAP Explainer object.
     """
     # Extract preprocessor and model
-    preprocessor = model.named_steps['preprocessor']
-    regressor = model.named_steps['model']
+    preprocessor, regressor = _extract_preprocessor_and_model(model)
 
     # Transform sample data
     X_transformed = preprocessor.transform(X_sample)
@@ -79,9 +97,9 @@ def create_shap_explainer(model, X_sample: pd.DataFrame) -> shap.Explainer:
     feature_names = get_feature_names_after_preprocessing(preprocessor, CATEGORICAL_FEATURES)
 
     # Create explainer based on model type
-    if hasattr(regressor, 'tree_') or hasattr(regressor, 'estimators_'):
+    if hasattr(regressor, 'tree_') or hasattr(regressor, 'estimators_') or 'LGBM' in type(regressor).__name__ or 'CatBoost' in type(regressor).__name__ or 'XGB' in type(regressor).__name__:
         # Tree-based model
-        explainer = shap.TreeExplainer(regressor, X_transformed, feature_names=feature_names)
+        explainer = shap.TreeExplainer(regressor, feature_names=feature_names)
     else:
         # Linear model - use LinearExplainer
         explainer = shap.LinearExplainer(regressor, X_transformed, feature_names=feature_names)
@@ -104,7 +122,7 @@ def compute_shap_values(
     Returns:
         Tuple of (shap_values, X_transformed, feature_names).
     """
-    preprocessor = model.named_steps['preprocessor']
+    preprocessor, _ = _extract_preprocessor_and_model(model)
     X_transformed = preprocessor.transform(X)
     feature_names = get_feature_names_after_preprocessing(preprocessor, CATEGORICAL_FEATURES)
 
@@ -206,7 +224,7 @@ def get_local_explanation(
     Returns:
         Dictionary with explanation details.
     """
-    preprocessor = model.named_steps['preprocessor']
+    preprocessor, _ = _extract_preprocessor_and_model(model)
     X_transformed = preprocessor.transform(X_single)
     feature_names = get_feature_names_after_preprocessing(preprocessor, CATEGORICAL_FEATURES)
 

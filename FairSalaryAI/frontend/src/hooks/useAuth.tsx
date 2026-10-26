@@ -27,9 +27,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData = await api.getCurrentUser()
         setUser(userData)
       }
-    } catch {
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('refresh_token')
+    } catch (err: any) {
+      // Only clear credentials if the server explicitly returned 401/403 unauthorized
+      if (err?.response?.status === 401 || err?.response?.status === 403) {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        setUser(null)
+      } else {
+        // Backend waking up or network pause: retain stored tokens for continuous access
+        console.warn('Backend waking up or network pause, maintaining authenticated session:', err?.message || err)
+      }
     } finally {
       setLoading(false)
     }

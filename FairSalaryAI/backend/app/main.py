@@ -133,6 +133,7 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 # Include routers
 app.include_router(health.router)
+app.include_router(health.router, prefix=settings.API_PREFIX)
 app.include_router(auth.router, prefix=settings.API_PREFIX)
 app.include_router(prediction.router, prefix=settings.API_PREFIX)
 app.include_router(fairness.router, prefix=settings.API_PREFIX)

@@ -9,17 +9,25 @@ print("  FAIRSALARY AI - LIVE PRODUCTION VERIFICATION")
 print(f"  Target: {API_URL}")
 print("=" * 60)
 
-# 1. Health check
+# 1. Health check (up to 90s to accommodate Render free-tier spin up)
 print("\n[1/4] Checking Backend Health (/health)...")
 try:
-    r = requests.get(f"{API_URL}/health", timeout=30)
+    r = requests.get(f"{API_URL}/health", timeout=90)
     print(f"   Status: {r.status_code}")
     print(f"   Response: {r.json()}")
     if r.status_code != 200:
         sys.exit(1)
 except Exception as e:
-    print(f"   Failed to connect to backend: {e}")
-    sys.exit(1)
+    print(f"   Retrying health check after spin up delay: {e}")
+    try:
+        r = requests.get(f"{API_URL}/health", timeout=60)
+        print(f"   Retry Status: {r.status_code}")
+        print(f"   Response: {r.json()}")
+        if r.status_code != 200:
+            sys.exit(1)
+    except Exception as e2:
+        print(f"   Failed to connect to backend: {e2}")
+        sys.exit(1)
 
 # 3. Authentication
 print("\n[3/4] Testing Authentication Login (/api/auth/login)...")

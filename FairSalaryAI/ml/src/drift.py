@@ -211,7 +211,7 @@ def prediction_drift(
 ) -> Dict[str, Any]:
     """Detect drift in model predictions."""
     psi_val = population_stability_index(reference_preds, current_preds)
-    ks_result = ks_2samp(reference_preds, current_preds)
+    ks_result = ks_test_drift(reference_preds, current_preds)
 
     return {
         'prediction_psi': psi_val,

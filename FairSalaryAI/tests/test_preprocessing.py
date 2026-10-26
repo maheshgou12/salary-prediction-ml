@@ -171,7 +171,18 @@ class TestPrediction:
     def model(self):
         """Load trained model."""
         import joblib
-        return joblib.load('ml/models/best_model.joblib')
+        from pathlib import Path
+        p = Path('ml/models/best_model.joblib')
+        if not p.exists():
+            candidates = [
+                Path('FairSalaryAI/ml/models/best_model.joblib'),
+                Path(__file__).resolve().parent.parent / 'ml' / 'models' / 'best_model.joblib'
+            ]
+            for c in candidates:
+                if c.exists():
+                    p = c
+                    break
+        return joblib.load(p)
 
     def test_model_predicts_single_sample(self, model):
         """Test that model can predict on a single sample."""

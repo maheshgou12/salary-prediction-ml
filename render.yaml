@@ -12,9 +12,9 @@ services:
       - key: DATABASE_URL
         value: sqlite:///./fairsalary.db
       - key: SECRET_KEY
-        generateValue: true
+        value: "fairsalary-production-permanent-auth-token-secret-key-2026-v1"
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: "525600"
+        value: "5256000"
       - key: FRONTEND_URL
         value: "https://salary-prediction-ml-ivory.vercel.app"
       - key: SMTP_HOST
